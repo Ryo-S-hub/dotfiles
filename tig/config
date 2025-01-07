@@ -1,0 +1,110 @@
+#==============================
+# General
+#==============================
+set line-graphics = utf-8
+set mouse = true
+set vertical-split = yes
+set ignore-case = true
+set diff-options = -m --first-parent
+set editor-line-number = yes
+set diff-highlight = true
+
+#==============================
+# View
+#==============================
+set main-view = id date author:full commit-title:graph=yes,refs=yes
+set stage-view = line-number:yes,interval=1 text
+set diff-view = line-number:yes,interval=1 text
+set log-view = line-number:yes,interval=1 text
+set blob-view = line-number:yes,interval=1 text
+
+#==============================
+# Color
+#==============================
+color cursor 255 default underline
+color status 255 default
+color title-focus black green
+color title-blur white default
+color main-tracked 105 default bold
+color diff-header black cyan
+
+#==============================
+# Key bindings
+#==============================
+bind generic g move-first-line
+bind generic G move-last-line
+bind main G move-last-line
+# git関連
+bind generic U ?git pull $(remote)
+bind generic F ?git fetch %(remote)
+bind main F ?git fetch %(remote)
+
+bind generic h scroll-left
+bind generic j move-down
+bind generic k move-up
+bind generic l scroll-right
+
+bind generic g  none
+bind generic gg move-first-line
+bind generic gj next
+bind generic gk previous
+bind generic gp parent
+bind generic gP back
+bind generic gn view-next
+
+bind main    G move-last-line
+bind generic G move-last-line
+
+bind generic <C-f> move-page-down
+bind generic <C-b> move-page-up
+
+bind generic v  none
+bind generic vm view-main
+bind generic vd view-diff
+bind generic vl view-log
+bind generic vt view-tree
+bind generic vb view-blob
+bind generic vx view-blame
+bind generic vr view-refs
+bind generic vs view-status
+bind generic vu view-stage
+bind generic vy view-stash
+bind generic vg view-grep
+bind generic vp view-pager
+bind generic vh view-help
+
+bind generic o  none
+bind generic oo :toggle sort-order
+bind generic os :toggle sort-field
+bind generic on :toggle line-number
+bind generic od :toggle date
+bind generic oa :toggle author
+bind generic og :toggle line-graphics
+bind generic of :toggle file-name
+bind generic op :toggle ignore-space
+bind generic oi :toggle id
+bind generic ot :toggle commit-title-overflow
+bind generic oF :toggle file-filter
+bind generic or :toggle commit-title-refs
+
+bind generic @  none
+bind generic @j :/^@@
+bind generic @k :?^@@
+bind generic @- :toggle diff-context -1
+bind generic @+ :toggle diff-context +1
+
+bind status  u  none
+bind stage   u  none
+bind generic uu status-update
+bind generic ur status-revert
+bind generic um status-merge
+bind generic ul stage-update-line
+bind generic up stage-update-part
+bind generic us stage-split-chunk
+
+bind generic c  none
+bind generic cc !git commit
+bind generic ca !?@git commit --amend --no-edit
+
+bind generic K view-help
+bind generic <C-w><C-w> view-next

@@ -1,0 +1,16 @@
+sethandler <C-C> a:ide
+
+set mouse=a
+
+" leaderの設定
+let mapleader = "\<Space>"
+
+" easymotionの設定
+set easymotion
+nmap s <Plug>(easymotion-s2)
+nmap t <Plug>(easymotion-t2)
+
+set multicursor
+map C-v <Plug>(multicursor-ms)
+map z <Plug>(multicursor-mcv)
+map Z <Plug>(multicursor-mcr)

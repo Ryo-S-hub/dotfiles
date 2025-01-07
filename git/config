@@ -1,0 +1,75 @@
+ [user]
+	name = RyotaS
+	email = wstone.notsw@gmail.com
+ [core]
+	autocrlf = input
+	quotepath = false
+	ignorecase = false
+	excludesfile =  /Users/shiraisr/.config/git/.gitignore
+	editor = code --wait
+	pager = vim -
+	precomposeunicode = true
+	safecrlf = true
+	pager = delta
+ [pager]
+	diff = delta
+	log = delta
+	reflog = delta
+	show = delta
+ [diff]
+	colorMoved = default
+ [delta]
+  side-by-side = true
+  plus-style = "syntax #012800"
+  minus-style = "syntax #340001"
+  syntax-theme = Monokai Extended
+  navigate = true
+ [ghq]
+  root = ~/workspace
+ [color]
+	ui = auto
+	status = auto
+  diff = auto
+  branch = auto
+	interactive = auto
+	grep = auto
+ [status]
+	showUntrackedFiles = all
+ [merge]
+  ff = false
+	conflictStyle = zdiff3
+ [init]
+	defaultBranch = main
+ [filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
+ [pull]
+	ff = only
+ [fetch]
+	prune = true
+ [rebase]
+	autostash = true
+	autosquash = true
+ [delta]
+	side-by-side = true
+	line-numbers = true
+	keep-plus-minus-markers = true
+ [interactive]
+	diffFilter = delta --color-only
+ [grep]
+	lineNumber = true
+ [commit]
+	template = /Users/shiraisr/.config/git/.commit_template
+ [branch]
+	autosetupmerge = always
+ [push]
+        default = current
+	autoSetupRemote = true
+ [alias]
+	ad = add .
+        cancel = reset --soft HEAD^ #直前のコミットを取り消す
+	push-f = push --force-with-lease
+[rerere]
+	enabled = true
