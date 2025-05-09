@@ -6,7 +6,6 @@
 	quotepath = false
 	ignorecase = false
 	excludesfile =  /Users/shiraisr/.config/git/.gitignore
-	editor = code --wait
 	pager = vim -
 	precomposeunicode = true
 	safecrlf = true
