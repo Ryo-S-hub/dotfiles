@@ -1,0 +1,67 @@
+[manager]
+show_hidden = true
+show_symlink = true
+mouse_events = ["click", "scroll", "move", "drag"]
+
+[[opener.edit]]
+run = 'nvim "$@"'
+block = true
+for = "unix"
+[[opener.edit]]
+run = 'cursor -r "$@"'
+orphan = true
+for = "unix"
+[[opener.edit]]
+run = 'code -r "$@"'
+orphan = true
+for = "unix"
+
+[[plugin.prepend_fetchers]]
+id = "git"
+name = "*"
+run = "git"
+
+[[plugin.prepend_fetchers]]
+id = "git"
+name = "*/"
+run = "git"
+
+[[manager.prepend_keymap]]
+on = ["P", "s"]
+run = "plugin projects save"
+desc = "Save current project"
+
+[[manager.prepend_keymap]]
+on = ["P", "l"]
+run = "plugin projects load"
+desc = "Load project"
+
+[[manager.prepend_keymap]]
+on = ["P", "P"]
+run = "plugin projects load_last"
+desc = "Load last project"
+
+[[manager.prepend_keymap]]
+on = ["P", "d"]
+run = "plugin projects delete"
+desc = "Delete project"
+
+[[manager.prepend_keymap]]
+on = ["P", "D"]
+run = "plugin projects delete_all"
+desc = "Delete all projects"
+
+[[manager.prepend_keymap]]
+on = ["P", "m"]
+run = "plugin projects 'merge current'"
+desc = "Merge current tab to other projects"
+
+[[manager.prepend_keymap]]
+on = ["P", "M"]
+run = "plugin projects 'merge all'"
+desc = "Merge current project to other projects"
+
+[[manager.prepend_keymap]]
+on = ["g", "i"]
+run = "plugin lazygit"
+desc = "run lazygit"

@@ -7,6 +7,8 @@ export XDG_CONFIG_HOME="$HOME/.config"
 export XDG_CACHE_HOME="$HOME/.cache"
 export XDG_STATE_HOME="$HOME/.local/state"
 export FZF_BASE="/opt/homebrew/bin/fzf"
+export FZF_DEFAULT_COMMAND='fd --type file --color=always'
+export FZF_DEFAULT_OPTS='--ansi'
 export FZF_CTRL_DEFAULT_COMMAND="'rg --files --hidden --follow --glob "!.git/*"'"
 # CTRL-Y to copy the command into clipboard using pbcopy
 export FZF_CTRL_R_OPTS="
@@ -30,8 +32,12 @@ export SAVEHIST="100000"
 export WORDCHARS="'*?_-.[]~=!@#$%^(){}<>'"
 export CARGO_HOME="/Users/shiraisr/.local/.cargo/bin"
 export RUSTUP_HOME="/Users/shiraisr/.local/.rustup"
-export VOLTA_HOME="/Users/shiraisr/.local/.volta"
-export VOLTA_CACHE="/Users/shiraisr/.cache/.volta"
+# export VOLTA_HOME="/Users/shiraisr/.local/.volta"
+# export VOLTA_CACHE="/Users/shiraisr/.cache/.volta"
+# export VOLTA_FEATURE_PNPM="1"
+
+export YAZI_CONFIG_HOME="/Users/shiraisr/.config/yazi"
+
 export LESSKEY="/Users/shiraisr/.config/less"
 export LESSHISTFILE="/Users/shiraisr/.local/state/less/lesshist"
 
@@ -41,10 +47,15 @@ export TIGRC_USER="Users/shiraisr/.config/tig"
 
 export ZDOTDIR="$XDG_CONFIG_HOME/zsh"
 
+# for Yazi
+export EDITOR="/opt/homebrew/bin/nvim"
+
 # https://knowledge.sakura.ad.jp/38985/
 export OPENSSL_X509_TEA_DISABLE=1
 
 export IDEAVIMRC="/Users/shiraisr/.config/.ideavimrc"
+
+export GOOGLE_APPLICATION_CREDENTIALS="/Users/shiraisr/kiiromamert-430d54897a92.json"
 
 # Added by Toolbox App
 export PATH="$PATH:/Users/shiraisr/Library/Application Support/JetBrains/Toolbox/scripts"

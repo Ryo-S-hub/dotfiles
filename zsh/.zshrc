@@ -7,12 +7,11 @@ PATH="$PATH:"'/usr/bin'
 PATH="$PATH:"'/usr/sbin'
 PATH="$PATH:"'/usr/local/bin'
 PATH="$PATH:"'/Library/Apple/usr/bin'
-PATH="$PATH:""$VOLTA_HOME"'/bin'
 PATH="$PATH:""$HOME"'/.local/.cargo/bin'
 PATH="$PATH:"'/System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources'
 PATH="$PATH:"'/Users/shiraisr/Library/Application Support/Code/User/globalStorage/ms-vscode-remote.remote-containers/cli-bin'
 export PATH="$HOME/go/bin:$PATH"
-
+export PATH=$HOME/.nodebrew/current/bin:$PATH
 
 
 alias -- ve='nvim ~/.config/zsh/.zshenv'
@@ -31,6 +30,7 @@ alias -- vz='nvim ${XDG_CONFIG_HOME}/zsh/.zshrc'
 alias -- vv='nvim ${XDG_CONFIG_HOME}/nvim/init.lua'
 alias -- vg='nvim ${XDG_CONFIG_HOME}/git/config'
 alias -- vt='nvim ${XDG_CONFIG_HOME}/tmux/tmux.conf'
+alias -- vy='nvim ${XDG_CONFIG_HOME}/yazi/yazi.toml'
 
 alias -- which-command='whence'
 alias -- ..='cd ..'
@@ -44,21 +44,35 @@ alias -- cat='bat'
 alias -- ps='procs'
 alias -- grep='rg'
 alias -- find='fd'
-alias -- top='htop'
+# alias -- top='htop'
 alias -- tm='tmux'
 alias -- tmc='tmux -CC'
 alias -- tmk='tmux kill-server'
 
 alias -- lg='lazygit'
+alias -- ld='lazydocker'
 alias -- d='docker compose'
 alias -- t='terraform'
+alias -- lt='tftui'
 alias -- crun='cargo run --quiet'
 alias -- t='terraform'
 alias -- yz='yazi'
 
+alias -- pn='pnpm'
+
+alias chrome="/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome"
+
+function y() {
+	local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
+	yazi "$@" --cwd-file="$tmp"
+	if cwd="$(command cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
+		builtin cd -- "$cwd"
+	fi
+	rm -f -- "$tmp"
+}
+
 plugins=(git)
 
-eval "$(starship init zsh)"
 
 setopt print_eight_bit
 setopt +o nomatch
@@ -161,6 +175,7 @@ eval "$(zoxide init zsh)"
 
 # tre-command(tree)
 tre() { command tre "$@" -e && source "/tmp/tre_aliases_$USER" 2>/dev/null; }
+alias -- tree='tre -a'
 
 # fzfの設定
  source <(fzf --zsh)
@@ -234,22 +249,45 @@ fbrr() {
 zle -N fbrr
 bindkey '^y^' fbrr
 
+autoload history-search-end
+zle -N history-beginning-search-backward-end history-search-end
+zle -N history-beginning-search-forward-end history-search-end
+bindkey "^p" history-beginning-search-backward-end
+bindkey "^n" history-beginning-search-forward-end
 
-if [[ ! -n $TMUX && $- == *l* ]]; then
-  # get the IDs
-  ID="`tmux list-sessions`"
-  if [[ -z "$ID" ]]; then
-    tmux new-session
-  fi
-  create_new_session="Create New Session"
-  ID="$ID\n${create_new_session}:"
-  ID="`echo $ID | fzf | cut -d: -f1`"
-  if [[ "$ID" = "${create_new_session}" ]]; then
-    tmux new-session
-  elif [[ -n "$ID" ]]; then
-    tmux attach-session -t "$ID"
-  else
-    :  # Start terminal normally
+# for vscode
+bindkey -e
+
+
+# if [[ ! -n $TMUX && $- == *l* ]]; then
+#   # get the IDs
+#   ID="`tmux list-sessions`"
+#   if [[ -z "$ID" ]]; then
+#     tmux new-session
+#   fi
+#   create_new_session="Create New Session"
+#   ID="$ID\n${create_new_session}:"
+#   ID="`echo $ID | fzf | cut -d: -f1`"
+#   if [[ "$ID" = "${create_new_session}" ]]; then
+#     tmux new-session
+#   elif [[ -n "$ID" ]]; then
+#     tmux attach-session -t "$ID"
+#   else
+#     :  # Start terminal normally
+#   fi
+# fi
+
+source $(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+eval "$(uv generate-shell-completion zsh)"
+eval "$(starship init zsh)"
+
+# 対話的シェルかどうか確認
+if [[ $- == *i* ]]; then
+
+  # ターミナルが Ghostty か確認
+  if [[ "$TERM" == "xterm-ghostty" ]]; then
+    # zellij 自動起動スクリプトを評価
+    eval "$(zellij setup --generate-auto-start zsh)"
   fi
 fi
 
@@ -259,3 +297,8 @@ if [ -f '/Users/shiraisr/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/shirai
 # The next line enables shell command completion for gcloud.
 if [ -f '/Users/shiraisr/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/shiraisr/google-cloud-sdk/completion.zsh.inc'; fi
 
+# The following lines have been added by Docker Desktop to enable Docker CLI completions.
+fpath=(/Users/shiraisr/.docker/completions $fpath)
+autoload -Uz compinit
+compinit
+# End of Docker CLI completions
