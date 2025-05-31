@@ -1,5 +1,5 @@
  [user]
-	name = RyotaS
+	name = Ryo-S-hub
 	email = wstone.notsw@gmail.com
  [core]
 	autocrlf = input
@@ -10,6 +10,7 @@
 	precomposeunicode = true
 	safecrlf = true
 	pager = delta
+	hooksPath = .husky
  [pager]
 	diff = delta
 	log = delta
@@ -64,11 +65,11 @@
  [branch]
 	autosetupmerge = always
  [push]
-        default = current
+  default = current
 	autoSetupRemote = true
  [alias]
 	ad = add .
-        cancel = reset --soft HEAD^ #直前のコミットを取り消す
+  cancel = reset --soft HEAD^ #直前のコミットを取り消す
 	push-f = push --force-with-lease
 [rerere]
 	enabled = true
