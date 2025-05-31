@@ -1,7 +1,9 @@
 #デフォルトの pager を less から lv に設定
 export PAGER='lv -c'
 #文字コードの指定
-export LANG=ja_JP.UTF-8
+# export LANG=ja_JP.UTF-8
+# https://onk.hatenablog.jp/entry/2025/05/22/023048
+export LANG=C
 
 export XDG_CONFIG_HOME="$HOME/.config"
 export XDG_CACHE_HOME="$HOME/.cache"
