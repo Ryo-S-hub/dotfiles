@@ -7,7 +7,7 @@
 if command -v fzf >/dev/null 2>&1; then
     source <(fzf --zsh)
     [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-    
+
     # Load fzf-git if available
     [[ -f "${ZSH_MODULES_DIR}/fzf-git.zsh" ]] && source "${ZSH_MODULES_DIR}/fzf-git.zsh"
 fi
@@ -30,4 +30,4 @@ fi
 # Prompt Configuration
 # ============================================================================
 # Starship prompt (uncomment to enable)
-# command -v starship >/dev/null 2>&1 && eval "$(starship init zsh)"
+command -v starship >/dev/null 2>&1 && eval "$(starship init zsh)"
