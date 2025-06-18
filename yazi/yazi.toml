@@ -1,21 +1,92 @@
+# Yazi configuration file
+
+# ============================================================================
+# Manager Settings
+# ============================================================================
 [manager]
-show_hidden = true
-show_symlink = true
-mouse_events = ["click", "scroll", "move", "drag"]
+ratio          = [1, 4, 3]
+sort_by        = "alphabetical"
+sort_sensitive = false
+sort_reverse   = false
+sort_dir_first = true
+linemode       = "none"
+show_hidden    = true
+show_symlink   = true
+scrolloff      = 5
+mouse_events   = ["click", "scroll", "touch", "move", "drag"]
 
-[[opener.edit]]
-run = 'nvim "$@"'
-block = true
-for = "unix"
-[[opener.edit]]
-run = 'cursor -r "$@"'
-orphan = true
-for = "unix"
-[[opener.edit]]
-run = 'code -r "$@"'
-orphan = true
-for = "unix"
+# ============================================================================
+# Preview Settings
+# ============================================================================
+[preview]
+tab_size        = 2
+max_width       = 1000
+max_height      = 1000
+cache_dir       = ""
+image_filter    = "triangle"
+image_quality   = 75
+sixel_fraction  = 15
+ueberzug_scale  = 1
+ueberzug_offset = [0, 0, 0, 0]
 
+# ============================================================================
+# Opener Settings
+# ============================================================================
+[opener]
+# Text files
+edit = [
+	{ run = 'nvim "$@"', block = true, desc = "Edit with Neovim", for = "unix" },
+	{ run = 'cursor -r "$@"', orphan = true, desc = "Open with Cursor", for = "unix" },
+	{ run = 'code -r "$@"', orphan = true, desc = "Open with VS Code", for = "unix" },
+]
+
+# Image files
+open = [
+	{ run = 'open "$@"', desc = "Open", for = "macos" },
+	{ run = 'xdg-open "$@"', desc = "Open", for = "linux" },
+]
+
+# Video/Audio files
+play = [
+	{ run = 'mpv "$@"', orphan = true, for = "unix" },
+	{ run = 'open "$@"', desc = "Open", for = "macos" },
+]
+
+# Archive files
+extract = [
+	{ run = 'unar "$1"', desc = "Extract here", for = "unix" },
+]
+
+# ============================================================================
+# Open Rules
+# ============================================================================
+[open]
+rules = [
+	{ name = "*/", use = [ "edit", "open" ] },
+
+	{ mime = "text/*",          use = [ "edit", "open" ] },
+	{ mime = "image/*",         use = [ "open", "edit" ] },
+	{ mime = "video/*",         use = [ "play", "open" ] },
+	{ mime = "audio/*",         use = [ "play", "open" ] },
+	{ mime = "inode/x-empty",   use = [ "edit", "open" ] },
+	{ mime = "application/json", use = [ "edit", "open" ] },
+	{ mime = "*/javascript",    use = [ "edit", "open" ] },
+
+	{ mime = "application/zip",             use = [ "extract", "open" ] },
+	{ mime = "application/gzip",            use = [ "extract", "open" ] },
+	{ mime = "application/x-tar",           use = [ "extract", "open" ] },
+	{ mime = "application/x-bzip",          use = [ "extract", "open" ] },
+	{ mime = "application/x-bzip2",         use = [ "extract", "open" ] },
+	{ mime = "application/x-7z-compressed", use = [ "extract", "open" ] },
+	{ mime = "application/x-rar",           use = [ "extract", "open" ] },
+	{ mime = "application/xz",              use = [ "extract", "open" ] },
+
+	{ mime = "*", use = [ "open" ] },
+]
+
+# ============================================================================
+# Plugin Settings
+# ============================================================================
 [[plugin.prepend_fetchers]]
 id = "git"
 name = "*"
@@ -26,42 +97,273 @@ id = "git"
 name = "*/"
 run = "git"
 
+# ============================================================================
+# Key Mappings - Navigation
+# ============================================================================
 [[manager.prepend_keymap]]
-on = ["P", "s"]
-run = "plugin projects save"
+on   = [ "g", "g" ]
+run  = "arrow -99999999"
+desc = "Move cursor to the top"
+
+[[manager.prepend_keymap]]
+on   = [ "G" ]
+run  = "arrow 99999999"
+desc = "Move cursor to the bottom"
+
+# ============================================================================
+# Key Mappings - File Operations
+# ============================================================================
+[[manager.prepend_keymap]]
+on   = [ "d", "d" ]
+run  = "remove"
+desc = "Move to trash"
+
+[[manager.prepend_keymap]]
+on   = [ "d", "D" ]
+run  = "remove --permanently"
+desc = "Remove permanently"
+
+[[manager.prepend_keymap]]
+on   = [ "y", "y" ]
+run  = "yank"
+desc = "Copy selected"
+
+[[manager.prepend_keymap]]
+on   = [ "y", "d" ]
+run  = "yank --cut"
+desc = "Cut selected"
+
+[[manager.prepend_keymap]]
+on   = [ "p" ]
+run  = "paste"
+desc = "Paste"
+
+[[manager.prepend_keymap]]
+on   = [ "P" ]
+run  = "paste --force"
+desc = "Paste (overwrite)"
+
+# ============================================================================
+# Key Mappings - Selection
+# ============================================================================
+[[manager.prepend_keymap]]
+on   = [ "<Space>" ]
+run  = [ "select --state=none", "arrow 1" ]
+desc = "Toggle selection"
+
+[[manager.prepend_keymap]]
+on   = [ "v" ]
+run  = "visual_mode"
+desc = "Enter visual mode"
+
+[[manager.prepend_keymap]]
+on   = [ "V" ]
+run  = "visual_mode --unset"
+desc = "Exit visual mode"
+
+[[manager.prepend_keymap]]
+on   = [ "<C-a>" ]
+run  = "select_all --state=true"
+desc = "Select all"
+
+[[manager.prepend_keymap]]
+on   = [ "<C-r>" ]
+run  = "select_all --state=none"
+desc = "Deselect all"
+
+# ============================================================================
+# Key Mappings - Search and Filter
+# ============================================================================
+[[manager.prepend_keymap]]
+on   = [ "/" ]
+run  = "find"
+desc = "Find next"
+
+[[manager.prepend_keymap]]
+on   = [ "?" ]
+run  = "find --previous"
+desc = "Find previous"
+
+[[manager.prepend_keymap]]
+on   = [ "n" ]
+run  = "find_arrow"
+desc = "Go to next found"
+
+[[manager.prepend_keymap]]
+on   = [ "N" ]
+run  = "find_arrow --previous"
+desc = "Go to previous found"
+
+[[manager.prepend_keymap]]
+on   = [ "s" ]
+run  = "search fd"
+desc = "Search with fd"
+
+[[manager.prepend_keymap]]
+on   = [ "S" ]
+run  = "search rg"
+desc = "Search content with ripgrep"
+
+[[manager.prepend_keymap]]
+on   = [ "f" ]
+run  = "filter --smart"
+desc = "Filter"
+
+# ============================================================================
+# Key Mappings - Tabs
+# ============================================================================
+[[manager.prepend_keymap]]
+on   = [ "t" ]
+run  = "tab_create --current"
+desc = "Create a tab"
+
+[[manager.prepend_keymap]]
+on   = [ "1" ]
+run  = "tab_switch 0"
+desc = "Switch to tab 1"
+
+[[manager.prepend_keymap]]
+on   = [ "2" ]
+run  = "tab_switch 1"
+desc = "Switch to tab 2"
+
+[[manager.prepend_keymap]]
+on   = [ "3" ]
+run  = "tab_switch 2"
+desc = "Switch to tab 3"
+
+[[manager.prepend_keymap]]
+on   = [ "4" ]
+run  = "tab_switch 3"
+desc = "Switch to tab 4"
+
+[[manager.prepend_keymap]]
+on   = [ "5" ]
+run  = "tab_switch 4"
+desc = "Switch to tab 5"
+
+[[manager.prepend_keymap]]
+on   = [ "[" ]
+run  = "tab_switch -1 --relative"
+desc = "Previous tab"
+
+[[manager.prepend_keymap]]
+on   = [ "]" ]
+run  = "tab_switch 1 --relative"
+desc = "Next tab"
+
+[[manager.prepend_keymap]]
+on   = [ "{" ]
+run  = "tab_swap -1"
+desc = "Swap tab to left"
+
+[[manager.prepend_keymap]]
+on   = [ "}" ]
+run  = "tab_swap 1"
+desc = "Swap tab to right"
+
+# ============================================================================
+# Key Mappings - Projects Plugin
+# ============================================================================
+[[manager.prepend_keymap]]
+on   = [ "P", "s" ]
+run  = "plugin projects save"
 desc = "Save current project"
 
 [[manager.prepend_keymap]]
-on = ["P", "l"]
-run = "plugin projects load"
+on   = [ "P", "l" ]
+run  = "plugin projects load"
 desc = "Load project"
 
 [[manager.prepend_keymap]]
-on = ["P", "P"]
-run = "plugin projects load_last"
+on   = [ "P", "P" ]
+run  = "plugin projects load_last"
 desc = "Load last project"
 
 [[manager.prepend_keymap]]
-on = ["P", "d"]
-run = "plugin projects delete"
+on   = [ "P", "d" ]
+run  = "plugin projects delete"
 desc = "Delete project"
 
 [[manager.prepend_keymap]]
-on = ["P", "D"]
-run = "plugin projects delete_all"
+on   = [ "P", "D" ]
+run  = "plugin projects delete_all"
 desc = "Delete all projects"
 
 [[manager.prepend_keymap]]
-on = ["P", "m"]
-run = "plugin projects 'merge current'"
+on   = [ "P", "m" ]
+run  = "plugin projects --args='merge current'"
 desc = "Merge current tab to other projects"
 
 [[manager.prepend_keymap]]
-on = ["P", "M"]
-run = "plugin projects 'merge all'"
+on   = [ "P", "M" ]
+run  = "plugin projects --args='merge all'"
 desc = "Merge current project to other projects"
 
+# ============================================================================
+# Key Mappings - Git Integration
+# ============================================================================
 [[manager.prepend_keymap]]
-on = ["g", "i"]
-run = "plugin lazygit"
-desc = "run lazygit"
+on   = [ "g", "s" ]
+run  = "shell 'git status' --block --confirm"
+desc = "Git status"
+
+[[manager.prepend_keymap]]
+on   = [ "g", "l" ]
+run  = "shell 'git log --oneline -n 20' --block --confirm"
+desc = "Git log"
+
+[[manager.prepend_keymap]]
+on   = [ "g", "d" ]
+run  = "shell 'git diff' --block --confirm"
+desc = "Git diff"
+
+[[manager.prepend_keymap]]
+on   = [ "g", "i" ]
+run  = "plugin lazygit"
+desc = "Open lazygit"
+
+# ============================================================================
+# Key Mappings - Shell Commands
+# ============================================================================
+[[manager.prepend_keymap]]
+on   = [ "!" ]
+run  = "shell --interactive"
+desc = "Run shell command"
+
+[[manager.prepend_keymap]]
+on   = [ ":" ]
+run  = "shell --block --interactive"
+desc = "Run shell command (block)"
+
+[[manager.prepend_keymap]]
+on   = [ "." ]
+run  = "hidden toggle"
+desc = "Toggle hidden files"
+
+[[manager.prepend_keymap]]
+on   = [ "z" ]
+run  = "plugin zoxide"
+desc = "Jump with zoxide"
+
+[[manager.prepend_keymap]]
+on   = [ "Z" ]
+run  = "plugin fzf"
+desc = "Jump with fzf"
+
+# ============================================================================
+# Tasks Settings
+# ============================================================================
+[tasks]
+micro_workers    = 10
+macro_workers    = 25
+bizarre_retry    = 5
+image_alloc      = 536870912  # 512MB
+image_bound      = [0, 0]
+suppress_preload = false
+
+# ============================================================================
+# Log Settings
+# ============================================================================
+[log]
+enabled = false

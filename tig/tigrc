@@ -1,0 +1,182 @@
+# Tig configuration file
+# vim: set expandtab sw=4 tabstop=4:
+
+# ============================================================================
+# View Settings
+# ============================================================================
+set main-view           = id:yes,color date:short author:full commit-title:graph=yes,refs=yes
+set blame-view          = id:yes,color date:short author:full line-number:yes,interval=1 text
+set tree-view           = date:short author:full id:yes,color file-size:units mode file-name
+set refs-view           = date:short author:full id:yes,color ref commit-title:graph=yes,refs=yes
+set stash-view          = date:short author:full id:yes,color commit-title:graph=yes,refs=yes
+set status-view         = status:long file-name
+set log-view            = date:short author:full id:yes,color commit-title:graph=yes,refs=yes
+set reflog-view         = date:relative author:full id:yes,color commit-title:graph=yes,refs=yes
+
+# ============================================================================
+# General Settings
+# ============================================================================
+set line-graphics       = utf-8
+set tab-size            = 4
+set truncation-delimiter = ~
+set reference-format    = [branch] <tag> {remote} ~replace~
+set commit-order        = topo
+set status-show-untracked-files = yes
+set status-show-untracked-dirs = yes
+set ignore-space        = no
+set show-notes          = yes
+set show-changes        = yes
+set vertical-split      = auto
+set split-view-height   = 67%
+set split-view-width    = 50%
+set editor-line-number  = yes
+set mouse               = yes
+set mouse-scroll        = 3
+set refresh-mode        = auto
+set refresh-interval    = 10
+set diff-highlight      = true
+
+# ============================================================================
+# Color Settings
+# ============================================================================
+# UI colors
+color default           15      235
+color cursor            white   241
+color title-blur        white   238
+color title-focus       white   24
+color status            green   default
+color date              yellow  default
+color author            cyan    default
+color main-commit       default default
+color main-tag          magenta default bold
+color main-local-tag    magenta default
+color main-remote       yellow  default
+color main-tracked      yellow  default bold
+color main-head         cyan    default bold
+color main-ref          cyan    default
+color tree-file         default default
+
+# Diff colors
+color diff-header       yellow  default
+color diff-index        blue    default
+color diff-chunk        magenta default
+color "diff --"         yellow  default
+color "--- "            yellow  default
+color "+++ "            yellow  default
+color "@@"              magenta default
+color "+"               green   default
+color " +"              green   default
+color "-"               red     default
+color " -"              red     default
+color "diff-tree "      blue    default
+color "Author: "        cyan    default
+color "Commit: "        magenta default
+color "Date: "          yellow  default
+color "AuthorDate: "    yellow  default
+color "CommitDate: "    yellow  default
+color "Merge: "         red     default
+color "References: "    red     default
+
+# ============================================================================
+# Key Bindings
+# ============================================================================
+# View switching
+bind generic    m       view-main
+bind generic    d       view-diff
+bind generic    l       view-log
+bind generic    t       view-tree
+bind generic    b       view-blame
+bind generic    r       view-refs
+bind generic    s       view-status
+bind generic    S       view-status
+bind generic    c       view-stage
+bind generic    y       view-stash
+bind generic    h       view-help
+bind generic    p       view-pager
+
+# Navigation
+bind generic    g       move-first-line
+bind generic    G       move-last-line
+bind generic    <Ctrl-D> move-half-page-down
+bind generic    <Ctrl-U> move-half-page-up
+bind generic    <Ctrl-F> move-page-down
+bind generic    <Ctrl-B> move-page-up
+
+# Searching
+bind generic    /       search
+bind generic    ?       search-back
+bind generic    n       find-next
+bind generic    N       find-prev
+
+# Actions
+bind generic    <Enter> enter
+bind generic    <Space> select
+bind generic    <Ctrl-C> quit
+bind generic    <Esc>   quit
+bind generic    q       quit
+bind generic    Q       quit
+bind generic    <F5>    refresh
+bind generic    R       refresh
+bind generic    <Ctrl-L> screen-redraw
+bind generic    .       prompt
+
+# Scrolling
+bind generic    |       scroll-first-col
+bind generic    <Left>  scroll-left
+bind generic    <Right> scroll-right
+bind generic    <Insert> scroll-line-up
+bind generic    <Delete> scroll-line-down
+bind generic    <SBack> scroll-page-up
+bind generic    <SFwd>  scroll-page-down
+
+# Misc
+bind generic    e       edit
+bind generic    :       prompt
+bind generic    o       options
+bind generic    <Ctrl-Y> copy-commit-id
+bind generic    @       stage-next
+bind generic    !       status-revert
+bind generic    M       status-merge
+
+# Stage/Status specific
+bind status     u       status-update
+bind status     !       status-revert
+bind status     M       status-merge
+bind stage      u       status-update
+bind stage      !       status-revert
+bind stage      1       stage-update-line
+bind stage      \       stage-split-chunk
+
+# Main view specific
+bind main       C       ?git cherry-pick %(commit)
+bind main       F       ?git fetch
+bind main       P       ?git pull
+
+# Branch view specific
+bind refs       C       ?git checkout %(branch)
+bind refs       !       ?git branch -D %(branch)
+
+# Custom commands
+bind generic    Y       @sh -c "echo -n %(commit) | pbcopy"
+bind generic    E       @sh -c "nvim $(git show --pretty=format: --name-only %(commit) | head -1)"
+
+# ============================================================================
+# External Commands
+# ============================================================================
+# Interactive rebase
+bind main       I       !git rebase -i %(commit)~1
+bind diff       I       !git rebase -i %(commit)~1
+
+# Commit with editor
+bind status     C       !git commit
+bind stage      C       !git commit
+
+# Push/Pull
+bind generic    P       !git push
+bind generic    p       !git pull
+
+# Stash
+bind status     S       !?git stash save "%(prompt Enter stash message: )"
+bind stash      P       !?git stash pop %(stash)
+bind stash      A       !?git stash apply %(stash)
+bind stash      !       !?git stash drop %(stash)
