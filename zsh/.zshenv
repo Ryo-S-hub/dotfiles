@@ -1,63 +1,204 @@
-#デフォルトの pager を less から lv に設定
-export PAGER='lv -c'
-#文字コードの指定
-# export LANG=ja_JP.UTF-8
-# https://onk.hatenablog.jp/entry/2025/05/22/023048
-export LANG=C
+#!/usr/bin/env zsh
+# ~/.config/zsh/.zshenv - Environment variables (loaded for all zsh instances)
 
-export XDG_CONFIG_HOME="$HOME/.config"
-export XDG_CACHE_HOME="$HOME/.cache"
-export XDG_STATE_HOME="$HOME/.local/state"
+# ============================================================================
+# XDG Base Directory Specification
+# ============================================================================
+export XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}"
+export XDG_CACHE_HOME="${XDG_CACHE_HOME:-$HOME/.cache}"
+export XDG_DATA_HOME="${XDG_DATA_HOME:-$HOME/.local/share}"
+export XDG_STATE_HOME="${XDG_STATE_HOME:-$HOME/.local/state}"
+export XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR:-/tmp/${UID}-runtime-dir}"
+
+# Ensure XDG runtime directory exists
+if [[ ! -d "$XDG_RUNTIME_DIR" ]]; then
+    mkdir -m 0700 "$XDG_RUNTIME_DIR"
+fi
+
+# ============================================================================
+# Zsh Configuration
+# ============================================================================
+export ZDOTDIR="$XDG_CONFIG_HOME/zsh"
+export HISTFILE="$XDG_STATE_HOME/zsh/history"
+export HISTSIZE=50000
+export SAVEHIST=100000
+export WORDCHARS='*?_-.[]~=!@#$%^(){}<>'
+
+# ============================================================================
+# Language and Locale
+# ============================================================================
+export LANG="${LANG:-en_US.UTF-8}"
+export LC_ALL="${LC_ALL:-en_US.UTF-8}"
+
+# ============================================================================
+# Editor Configuration
+# ============================================================================
+export EDITOR="nvim"
+export VISUAL="nvim"
+export PAGER="${PAGER:-less}"
+
+# ============================================================================
+# Less Configuration
+# ============================================================================
+export LESS="-R -F -X -i -P ?f%f:(stdin). ?lb%lb?L/%L.. [?eEOF:?pb%pb\%..]"
+export LESSCHARSET="utf-8"
+export LESSKEY="$XDG_CONFIG_HOME/less/lesskey"
+export LESSHISTFILE="$XDG_STATE_HOME/less/history"
+
+# ============================================================================
+# FZF Configuration
+# ============================================================================
 export FZF_BASE="/opt/homebrew/bin/fzf"
-export FZF_DEFAULT_COMMAND='fd --type file --color=always'
-export FZF_DEFAULT_OPTS='--ansi'
-export FZF_CTRL_DEFAULT_COMMAND="'rg --files --hidden --follow --glob "!.git/*"'"
-# CTRL-Y to copy the command into clipboard using pbcopy
+export FZF_DEFAULT_COMMAND='fd --type file --hidden --follow --exclude .git --color=always'
+export FZF_DEFAULT_OPTS='
+  --ansi
+  --height 40%
+  --layout=reverse
+  --border
+  --inline-info
+  --bind="ctrl-y:execute-silent(echo -n {2..} | pbcopy)+abort"
+  --bind="ctrl-d:half-page-down"
+  --bind="ctrl-u:half-page-up"
+'
+
+export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+export FZF_CTRL_T_OPTS="
+  --preview 'bat -n --color=always --line-range=:500 {}'
+  --bind 'ctrl-/:change-preview-window(down|hidden|)'
+"
+
+export FZF_ALT_C_COMMAND='fd --type directory --hidden --follow --exclude .git'
+export FZF_ALT_C_OPTS="--preview 'tree -C {} | head -200'"
+
 export FZF_CTRL_R_OPTS="
+  --preview 'echo {}'
+  --preview-window down:3:hidden:wrap
+  --bind 'ctrl-/:toggle-preview'
   --bind 'ctrl-y:execute-silent(echo -n {2..} | pbcopy)+abort'
   --color header:italic
-  --header 'Press CTRL-Y to copy command into clipboard'"
-export FZF_CTRL_T_OPTS="
-  --walker-skip .git,node_modules,target
-  --preview 'bat -n --color=always {}'
-  --bind 'ctrl-/:change-preview-window(down|hidden|)'"
-# Print tree structure in the preview window
-export FZF_ALT_C_OPTS="
-  --walker-skip .git,node_modules,target
-  --preview 'tree -C {}'"
-export FZF_TMUX=1
-export FZF_TMUX_OPTS="-p 50%"
-export _ZO_DATA_DIR="/Users/shiraisr/.cache/zoxide"
-export RUST_BACKTRACE="1"
-export HISTFILE="/Users/shiraisr/.local/state/.zsh_history"
-export SAVEHIST="100000"
-export WORDCHARS="'*?_-.[]~=!@#$%^(){}<>'"
-export CARGO_HOME="/Users/shiraisr/.local/.cargo/bin"
-export RUSTUP_HOME="/Users/shiraisr/.local/.rustup"
-# export VOLTA_HOME="/Users/shiraisr/.local/.volta"
-# export VOLTA_CACHE="/Users/shiraisr/.cache/.volta"
-# export VOLTA_FEATURE_PNPM="1"
+  --header 'Press CTRL-Y to copy command into clipboard'
+"
 
-export YAZI_CONFIG_HOME="/Users/shiraisr/.config/yazi"
+# ============================================================================
+# Development Tools
+# ============================================================================
+# Rust
+export CARGO_HOME="${CARGO_HOME:-$HOME/.cargo}"
+export RUSTUP_HOME="${RUSTUP_HOME:-$HOME/.rustup}"
+export RUST_BACKTRACE=1
 
-export LESSKEY="/Users/shiraisr/.config/less"
-export LESSHISTFILE="/Users/shiraisr/.local/state/less/lesshist"
+# Node.js
+export NPM_CONFIG_USERCONFIG="$XDG_CONFIG_HOME/npm/npmrc"
+export NODE_REPL_HISTORY="$XDG_STATE_HOME/node/repl_history"
 
-export NPM_CONFIG_USERCONFIG="/Users/shiraisr/.config/npm/.npmrc"
+# Go
+export GOPATH="${GOPATH:-$HOME/go}"
+export GOMODCACHE="$XDG_CACHE_HOME/go/mod"
 
-export TIGRC_USER="Users/shiraisr/.config/tig"
+# Deno
+export DENO_DIR="$XDG_CACHE_HOME/deno"
 
-export ZDOTDIR="$XDG_CONFIG_HOME/zsh"
+# Python
+export PYENV_ROOT="${PYENV_ROOT:-$HOME/.pyenv}"
 
-# for Yazi
-export EDITOR="/opt/homebrew/bin/nvim"
+# Java
+if [[ -x "/usr/libexec/java_home" ]]; then
+    export JAVA_HOME=$(/usr/libexec/java_home -v 17 2>/dev/null)
+fi
 
-# https://knowledge.sakura.ad.jp/38985/
-export OPENSSL_X509_TEA_DISABLE=1
+# GPG
+export GPG_TTY=$(tty)
 
-export IDEAVIMRC="/Users/shiraisr/.config/.ideavimrc"
+# ============================================================================
+# Tool Configurations
+# ============================================================================
+# Zoxide
+export _ZO_DATA_DIR="$XDG_DATA_HOME/zoxide"
 
-export GOOGLE_APPLICATION_CREDENTIALS="/Users/shiraisr/kiiromamert-430d54897a92.json"
+# Yazi
+export YAZI_CONFIG_HOME="$XDG_CONFIG_HOME/yazi"
 
-# Added by Toolbox App
-export PATH="$PATH:/Users/shiraisr/Library/Application Support/JetBrains/Toolbox/scripts"
+# Tig
+export TIGRC_USER="$XDG_CONFIG_HOME/tig/tigrc"
+
+# Docker
+export DOCKER_CONFIG="$XDG_CONFIG_HOME/docker"
+
+# ============================================================================
+# macOS Specific
+# ============================================================================
+if [[ "$OSTYPE" == darwin* ]]; then
+  # Homebrew
+  export HOMEBREW_NO_ANALYTICS=1
+  export HOMEBREW_NO_ENV_HINTS=1
+  
+  # OpenSSL
+  export OPENSSL_X509_TEA_DISABLE=1
+fi
+
+# ============================================================================
+# PATH Configuration
+# ============================================================================
+# Function to add to PATH (prevents duplicates)
+path_prepend() {
+  case ":$PATH:" in
+    *:"$1":*) ;;
+    *) export PATH="$1:$PATH" ;;
+  esac
+}
+
+path_append() {
+  case ":$PATH:" in
+    *:"$1":*) ;;
+    *) export PATH="$PATH:$1" ;;
+  esac
+}
+
+# System paths (usually already set)
+path_prepend "/usr/local/bin"
+path_prepend "/opt/homebrew/bin"
+path_prepend "/opt/homebrew/sbin"
+
+# Development tools
+path_prepend "$CARGO_HOME/bin"
+path_prepend "$GOPATH/bin"
+path_prepend "$HOME/.local/bin"
+path_prepend "$PYENV_ROOT/bin"
+
+# Node.js tools
+if [[ -d "$HOME/.nodebrew/current/bin" ]]; then
+  path_prepend "$HOME/.nodebrew/current/bin"
+fi
+
+# pnpm
+if [[ -d "$HOME/Library/pnpm" ]]; then
+  path_prepend "$HOME/Library/pnpm"
+fi
+
+# Deno
+if [[ -d "$HOME/.deno/bin" ]]; then
+  path_prepend "$HOME/.deno/bin"
+fi
+
+# Google Cloud SDK
+if [[ -d "$HOME/google-cloud-sdk/bin" ]]; then
+  path_append "$HOME/google-cloud-sdk/bin"
+fi
+
+# JetBrains Toolbox
+if [[ -d "$HOME/Library/Application Support/JetBrains/Toolbox/scripts" ]]; then
+  path_append "$HOME/Library/Application Support/JetBrains/Toolbox/scripts"
+fi
+
+# ============================================================================
+# Security - Handle sensitive files carefully
+# ============================================================================
+# Only set if the file exists and has proper permissions
+if [[ -f "$HOME/kiiromamert-430d54897a92.json" ]]; then
+  export GOOGLE_APPLICATION_CREDENTIALS="$HOME/kiiromamert-430d54897a92.json"
+fi
+
+# ============================================================================
+# Cleanup
+# ============================================================================
+unfunction path_prepend path_append
