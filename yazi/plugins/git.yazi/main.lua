@@ -17,12 +17,12 @@ local CODES = {
 }
 
 local PATTERNS = {
-	{ "!$", CODES.ignored },
-	{ "?$", CODES.untracked },
-	{ "[MT]", CODES.modified },
-	{ "[AC]", CODES.added },
-	{ "D", CODES.deleted },
-	{ "U", CODES.updated },
+	{ "!$",       CODES.ignored },
+	{ "?$",       CODES.untracked },
+	{ "[MT]",     CODES.modified },
+	{ "[AC]",     CODES.added },
+	{ "D",        CODES.deleted },
+	{ "U",        CODES.updated },
 	{ "[AD][AD]", CODES.updated },
 }
 
@@ -190,7 +190,8 @@ local function fetch(_, job)
 	-- stylua: ignore
 	local output, err = Command("git")
 		:cwd(tostring(cwd))
-		:arg({ "--no-optional-locks", "-c", "core.quotePath=", "status", "--porcelain", "-unormal", "--no-renames", "--ignored=matching" })
+		:arg({ "--no-optional-locks", "-c", "core.quotePath=", "status", "--porcelain", "-unormal", "--no-renames",
+			"--ignored=matching" })
 		:arg(paths)
 		:stdout(Command.PIPED)
 		:output()
