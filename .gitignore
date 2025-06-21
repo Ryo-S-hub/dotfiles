@@ -1,0 +1,17 @@
+.claude/
+.DS_Store
+aerospace/
+claude/
+crossnote/
+dlv/
+docker/
+gcloud/
+github-copilot/
+htop/
+jgit/
+raycast/
+rest-client/
+Unreal Engine/
+uv/
+zsh/.zsh_sessions
+karabiner/automatic_backups/
