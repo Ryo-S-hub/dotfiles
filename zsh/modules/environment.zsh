@@ -38,7 +38,10 @@ export BAT_THEME="TwoDark"
 export BAT_STYLE="numbers,changes,header"
 
 # Ripgrep configuration
-export RIPGREP_CONFIG_PATH="$XDG_CONFIG_HOME/ripgrep/config"
+# export RIPGREP_CONFIG_PATH="$XDG_CONFIG_HOME/ripgrep/config"
+
+# Claude CLI
+export CLAUDE_CONFIG_DIR="$XDG_CONFIG_HOME/.claude"
 
 # Man pages with bat
 if command -v bat >/dev/null 2>&1; then
@@ -70,3 +73,12 @@ export MAKEFLAGS="-j$(sysctl -n hw.ncpu)"
 export LC_COLLATE="C"
 export LC_NUMERIC="C"
 export LC_TIME="en_US.UTF-8"
+
+# ============================================================================
+# GCP Configuration
+# ============================================================================
+# read .env file
+if [[ -f "$HOME/.config/zsh/modules/.env" ]]; then
+    export $(grep -v '^#' "$HOME/.config/zsh/modules/.env" | xargs)
+fi
+

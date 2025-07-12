@@ -18,6 +18,14 @@
 	fscache = true
 	# Security
 	trustctime = false
+  # 大きなリポジトリでの高速化
+	untrackedCache = true
+  fsmonitor = true
+
+[index]
+  # インデックス操作の高速化
+  version = 4
+  recordEndOfIndexEntries = true
 
 [pager]
 	diff = delta
@@ -25,6 +33,11 @@
 	reflog = delta
 	show = delta
 	blame = delta
+
+[blame]
+  # より詳細なblame情報
+  markIgnoredLines = true
+  markUnblamableLines = true
 
 [diff]
 	colorMoved = default

@@ -1,0 +1,132 @@
+# Lazydocker configuration file
+
+# UI configuration
+gui:
+  # Scroll settings
+  scrollHeight: 2
+  scrollOffMargin: 2
+  # Panel width settings
+  sidePanelWidth: 0.3333
+  expandedSidePanel: false
+  # Text wrapping
+  wrapText: true
+  # Theme
+  theme:
+    activeBorderColor:
+      - green
+      - bold
+    inactiveBorderColor:
+      - default
+    selectedLineBgColor:
+      - reverse
+    selectedRangeBgColor:
+      - reverse
+
+# Logging configuration
+logs:
+  # Show timestamps in logs
+  timestamps: true
+  # Show logs from last 60 minutes
+  since: '60m'
+  # Number of log lines to tail
+  tail: '200'
+
+# Custom commands
+customCommands:
+  containers:
+    - name: 'bash'
+      attach: true
+      command: 'docker exec -it {{ .Container.ID }} /bin/bash'
+      serviceNames: []
+    - name: 'sh'
+      attach: true
+      command: 'docker exec -it {{ .Container.ID }} /bin/sh'
+      serviceNames: []
+    - name: 'logs'
+      attach: false
+      command: 'docker logs --follow --tail 100 {{ .Container.ID }}'
+      serviceNames: []
+    - name: 'stats'
+      attach: false
+      command: 'docker stats {{ .Container.ID }}'
+      serviceNames: []
+  images:
+    - name: 'inspect'
+      attach: false
+      command: 'docker inspect {{ .Image.ID }} | jq'
+      serviceNames: []
+    - name: 'history'
+      attach: false
+      command: 'docker history {{ .Image.ID }}'
+      serviceNames: []
+
+# Key bindings (Vim-style)
+keybinding:
+  universal:
+    quit: 'q'
+    quitWithoutConfirm: 'Q'
+    refresh: 'r'
+    filter: '/'
+    nextMatch: 'n'
+    prevMatch: 'N'
+    scrollUpMain: 'k'
+    scrollDownMain: 'j'
+    scrollUpSide: 'K'
+    scrollDownSide: 'J'
+    scrollLeft: 'h'
+    scrollRight: 'l'
+    prevTab: 'H'
+    nextTab: 'L'
+    prevPanel: '<'
+    nextPanel: '>'
+    pageUp: 'u'
+    pageDown: 'd'
+    gotoTop: 'g'
+    gotoBottom: 'G'
+    togglePanel: '<tab>'
+    confirm: '<enter>'
+    return: '<esc>'
+    
+  containers:
+    viewLogs: 'l'
+    restartContainer: 'r'
+    removeContainer: 'd'
+    inspectContainer: 'i'
+    execShell: 's'
+    attachContainer: 'a'
+    
+  images:
+    removeImage: 'd'
+    inspectImage: 'i'
+    
+  volumes:
+    removeVolume: 'd'
+    inspectVolume: 'i'
+
+# Statistics graphs
+stats:
+  graphs:
+    - caption: "CPU (%)"
+      statPath: "DerivedStats.CPUPercentage"
+      color: "green"
+    - caption: "Memory (%)"
+      statPath: "DerivedStats.MemoryPercentage"
+      color: "blue"
+
+# Reporting settings
+reporting: 'off'
+
+# Confirmation prompts
+confirmOnQuit: false
+
+# Command templates
+commandTemplates:
+  dockerCompose: 'docker compose'
+  restartService: '{{ .DockerCompose }} restart {{ .Service.Name }}'
+  stopService: '{{ .DockerCompose }} stop {{ .Service.Name }}'
+  recreateService: '{{ .DockerCompose }} up -d --force-recreate {{ .Service.Name }}'
+
+# OS specific settings
+oS:
+  openCommand: 'open {{filename}}'
+  openLinkCommand: 'open {{link}}'

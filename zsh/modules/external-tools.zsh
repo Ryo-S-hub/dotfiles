@@ -4,13 +4,8 @@
 # ============================================================================
 # FZF Initialization
 # ============================================================================
-if command -v fzf >/dev/null 2>&1; then
-    source <(fzf --zsh)
-    [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-
-    # Load fzf-git if available
-    [[ -f "${ZSH_MODULES_DIR}/fzf-git.zsh" ]] && source "${ZSH_MODULES_DIR}/fzf-git.zsh"
-fi
+# FZF デフォルト設定（Ctrl+P/Ctrl+Nで上下移動）
+export FZF_DEFAULT_OPTS="--bind 'ctrl-p:up,ctrl-n:down,ctrl-k:up,ctrl-j:down'"
 
 # ============================================================================
 # FZF Custom Functions
@@ -21,10 +16,10 @@ fi
 # ============================================================================
 # Terminal-specific Settings
 # ============================================================================
-# Auto-start Zellij for Ghostty
-if [[ $- == *i* ]] && [[ "$TERM" == "xterm-ghostty" ]]; then
-    command -v zellij >/dev/null 2>&1 && eval "$(zellij setup --generate-auto-start zsh)"
-fi
+# Auto-start Zellij for Ghostty - コメントアウト（tmuxに移行）
+# if [[ $- == *i* ]] && [[ "$TERM" == "xterm-ghostty" ]]; then
+#     command -v zellij >/dev/null 2>&1 && eval "$(zellij setup --generate-auto-start zsh)"
+# fi
 
 # ============================================================================
 # Prompt Configuration

@@ -1,6 +1,5 @@
 #!/usr/bin/env zsh
 # FZF Custom Functions - Modular configuration
-
 # ============================================================================
 # Process Management
 # ============================================================================
@@ -41,20 +40,11 @@ dcl() {
 # Git Functions
 # ============================================================================
 # Git branch checkout
-fbr() {
+fb() {
     local branches branch
     branches=$(git --no-pager branch -vv) &&
     branch=$(echo "$branches" | fzf +m) &&
     git checkout $(echo "$branch" | awk '{print $1}' | sed "s/.* //")
-}
-
-# Git branch checkout (including remotes)
-fbrr() {
-    local branches branch
-    branches=$(git branch --all | grep -v HEAD) &&
-    branch=$(echo "$branches" |
-             fzf-tmux -d $(( 2 + $(wc -l <<< "$branches") )) +m) &&
-    git checkout $(echo "$branch" | sed "s/.* //" | sed "s#remotes/[^/]*/##")
 }
 
 # Git add with preview
@@ -86,7 +76,7 @@ FZF-EOF"
 # CD to recent directory
 fzf-cdr() {
     local selected_dir
-    selected_dir=$(cdr -l | awk '{ print $2 }' | fzf --reverse --preview 'eza --tree --color=always --level=2 --icons {}')
+    selected_dir=$(cdr -l | awk '{ print $2 }' | fzf --reverse --preview 'eza --tree --color=always --level=2 --icons {}' --bind 'ctrl-p:up,ctrl-n:down')
     if [[ -n "$selected_dir" ]]; then
         BUFFER="cd ${selected_dir}"
         zle accept-line
@@ -103,14 +93,14 @@ fdgit() {
         return 1
     fi
     
-    dir="$(cd "$top_dir" || return 1; fd --type d --exclude .git | fzf --preview 'eza --tree --color=always --level=2 --icons {}')"
+    dir="$(cd "$top_dir" || return 1; fd --type d --exclude .git | fzf --preview 'eza --tree --color=always --level=2 --icons {}' --bind 'ctrl-p:up,ctrl-n:down')"
     [[ -n "$dir" ]] && cd "$top_dir/$dir"
 }
 
 # GHQ repository navigation
 fghq() {
     local selected
-    selected=$(ghq list | fzf --preview "bat --color=always --style=numbers --line-range=:50 $(ghq root)/{}/README.md 2>/dev/null || eza --tree --color=always --level=2 --icons $(ghq root)/{}")
+    selected=$(ghq list | fzf --preview "bat --color=always --style=numbers --line-range=:50 $(ghq root)/{}/README.md 2>/dev/null || eza --tree --color=always --level=2 --icons $(ghq root)/{}" --bind 'ctrl-p:up,ctrl-n:down')
     
     [[ -n "$selected" ]] && cd "$(ghq root)/$selected"
 }
@@ -118,7 +108,7 @@ fghq() {
 # Zoxide with fzf
 zf() {
     local dir
-    dir=$(zoxide query -l | fzf --height 40% --reverse --preview "eza --tree --color=always --level=2 --icons {}")
+    dir=$(zoxide query -l | fzf --height 40% --reverse --preview "eza --tree --color=always --level=2 --icons {}" --bind 'ctrl-p:up,ctrl-n:down')
     [[ -n "$dir" ]] && cd "$dir"
 }
 
@@ -126,14 +116,15 @@ zf() {
 # File Search
 # ============================================================================
 # Ripgrep with fzf
-frg() {
+fr() {
     local result file line
     result=$(rg --line-number --no-heading --color=always --smart-case "${*:-}" |
         fzf --ansi \
             --color "hl:-1:underline,hl+:-1:underline:reverse" \
             --delimiter : \
             --preview 'bat --color=always {1} --highlight-line {2}' \
-            --preview-window 'up,60%,border-bottom,+{2}+3/3,~3')
+            --preview-window 'up,60%,border-bottom,+{2}+3/3,~3' \
+            --bind 'ctrl-p:up,ctrl-n:down')
     
     if [[ -n "$result" ]]; then
         file=$(echo "$result" | cut -d: -f1)
@@ -143,9 +134,9 @@ frg() {
 }
 
 # Open file with preview
-fzfv() {
+fe() {
     local file
-    file=$(fzf --height 40% --layout=reverse --preview "bat --style=numbers --color=always {}")
+    file=$(fzf --height 40% --layout=reverse --preview "bat --style=numbers --color=always {}" --bind 'ctrl-p:up,ctrl-n:down')
     [[ -n "$file" ]] && ${EDITOR:-nvim} "$file"
 }
 
@@ -156,7 +147,7 @@ fzfv() {
 fnpm() {
     local script
     if [[ -f package.json ]]; then
-        script=$(jq -r '.scripts | keys[]' package.json | fzf --height 40% --reverse --preview "jq -r '.scripts.\"{}\"' package.json")
+        script=$(jq -r '.scripts | keys[]' package.json | fzf --height 40% --reverse --preview "jq -r '.scripts.\"{}\"' package.json" --bind 'ctrl-p:up,ctrl-n:down')
         
         if [[ -n "$script" ]]; then
             echo "Running: npm run $script"
@@ -168,28 +159,11 @@ fnpm() {
 }
 
 # ============================================================================
-# Session Management
-# ============================================================================
-# Tmux session switcher
-ftmux() {
-    local session
-    session=$(tmux list-sessions -F "#{session_name}" 2>/dev/null | fzf --height 40% --reverse)
-    
-    if [[ -n "$session" ]]; then
-        if [[ -n "$TMUX" ]]; then
-            tmux switch-client -t "$session"
-        else
-            tmux attach-session -t "$session"
-        fi
-    fi
-}
-
-# ============================================================================
 # History
 # ============================================================================
 # History search
 select-history() {
-    BUFFER=$(history -n -r 1 | fzf --no-sort +m --query "$LBUFFER" --prompt="History > ")
+    BUFFER=$(history -n -r 1 | fzf --no-sort +m --query "$LBUFFER" --prompt="History > " --bind 'ctrl-p:up,ctrl-n:down')
     CURSOR=$#BUFFER
 }
 
@@ -199,8 +173,6 @@ select-history() {
 # Register functions as ZLE widgets where appropriate
 zle -N fzf-cdr
 zle -N fdgit
-zle -N fbr
-zle -N fbrr
 zle -N select-history
 
 # ============================================================================
@@ -209,6 +181,4 @@ zle -N select-history
 # Default key bindings - can be overridden in .zshrc
 bindkey '^f' fzf-cdr
 bindkey '^g' fdgit
-bindkey '^b' fbr
-bindkey '^y^y' fbrr
 bindkey '^r' select-history

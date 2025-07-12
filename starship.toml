@@ -76,7 +76,7 @@ truncation_symbol = "…/"
 "Downloads" = " "
 "Desktop" = "󰧨 "
 "~" = " "
-".config" = " "
+".config" = "  .config"
 "dev" = " "
 "src" = " "
 

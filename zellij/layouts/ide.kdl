@@ -1,0 +1,48 @@
+layout {
+    default_tab_template {
+        pane size=1 borderless=true {
+            plugin location="zellij:tab-bar"
+        }
+        children
+        pane size=2 borderless=true {
+            plugin location="zellij:status-bar"
+        }
+    }
+    
+    tab name="IDE" focus=true {
+        pane split_direction="vertical" {
+            pane split_direction="horizontal" {
+                pane size="75%" name="Editor" {
+                    command "nvim"
+                    args "."
+                }
+                pane size="25%" name="Terminal" {
+                    command "zsh"
+                }
+            }
+        }
+    }
+    
+    tab name="Terminal" {
+        pane {
+            command "zsh"
+        }
+    }
+    
+    tab name="Git" {
+        pane split_direction="horizontal" {
+            pane size="60%" name="Lazygit" {
+                command "lazygit"
+            }
+            pane split_direction="vertical" {
+                pane size="50%" name="Log" {
+                    command "sh"
+                    args "-c" "git log --graph --pretty=format:'%C(auto)%h%d %s %C(black)%C(bold)%cr' --all"
+                }
+                pane size="50%" name="Terminal" {
+                    command "zsh"
+                }
+            }
+        }
+    }
+}

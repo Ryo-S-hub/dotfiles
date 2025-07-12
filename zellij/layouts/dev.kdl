@@ -1,0 +1,81 @@
+layout {
+    default_tab_template {
+        pane size=1 borderless=true {
+            plugin location="zellij:tab-bar"
+        }
+        children
+        pane size=2 borderless=true {
+            plugin location="zellij:status-bar"
+        }
+    }
+    
+    // 開発用タブ
+    tab name="Code" focus=true {
+        pane split_direction="vertical" {
+            // ファイルブラウザ
+            pane split_direction="horizontal" {
+                // メインエディタ
+                pane size="80%" name="Editor" {
+                    command "nvim"
+                    focus true
+                }
+                // ターミナル/テスト実行用
+                pane split_direction="vertical" {
+                    pane size="50%" name="Terminal" {
+                        command "zsh"
+                    }
+                    pane size="50%" name="Test" {
+                        command "zsh"
+                    }
+                }
+            }
+        }
+    }
+    
+    // Git操作用タブ
+    tab name="Git" {
+        pane split_direction="horizontal" {
+            pane size="60%" name="Lazygit" {
+                command "lazygit"
+            }
+            pane split_direction="vertical" {
+                pane size="50%" name="Log" {
+                    command "sh"
+                    args "-c" "git log --graph --pretty=format:'%C(auto)%h%d %s %C(black)%C(bold)%cr' --all"
+                }
+                pane size="50%" name="Terminal" {
+                    command "zsh"
+                }
+            }
+        }
+    }
+    
+    // Docker/サービス管理用タブ
+    tab name="Services" {
+        pane split_direction="horizontal" {
+            pane size="60%" name="Docker" {
+                command "lazydocker"
+            }
+            pane split_direction="vertical" {
+                pane size="50%" name="Logs" {
+                    command "zsh"
+                }
+                pane size="50%" name="Terminal" {
+                    command "zsh"
+                }
+            }
+        }
+    }
+    
+    // 汎用ターミナルタブ
+    tab name="Terminal" {
+        pane split_direction="horizontal" {
+            pane size="50%" {
+                command "zsh"
+            }
+            pane size="50%" {
+                command "zsh"
+            }
+        }
+    }
+}

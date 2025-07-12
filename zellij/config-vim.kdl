@@ -1,29 +1,21 @@
-// Zellij Ctrl-q prefix configuration (tmux-style)
-// Ctrl-q as prefix key for tmux-like experience
+// Zellij Vim-style configuration
+// Ctrl+a as prefix key (screen-style) to avoid conflicts with zsh/nvim
 
 // ============================================================================
-// Key Bindings - Ctrl-q Prefix Based (tmux-style)
+// Key Bindings - Vim Style
 // ============================================================================
 keybinds clear-defaults=true {
     normal {
-        // Ctrl-q as prefix to enter tmux mode
-        bind "Ctrl q" { SwitchToMode "tmux"; }
+        // Primary prefix key - screen style (avoids conflict with Ctrl+Space in nvim)
+        bind "Ctrl a" { SwitchToMode "tmux"; }
         
-        // Ctrl-t for session manager (fzf-style session switching)
-        bind "Ctrl t" {
-            LaunchOrFocusPlugin "session-manager" {
-                floating true
-                move_to_focused_tab true
-            }
-        }
-        
-        // Direct navigation with Alt (for convenience)
-        bind "Alt h" { MoveFocus "left"; }
+        // Direct pane navigation with Alt+hjkl (no conflict)
+        bind "Alt h" { MoveFocusOrTab "left"; }
         bind "Alt j" { MoveFocus "down"; }
         bind "Alt k" { MoveFocus "up"; }
-        bind "Alt l" { MoveFocus "right"; }
+        bind "Alt l" { MoveFocusOrTab "right"; }
         
-        // Direct tab switching with Alt + number
+        // Direct tab navigation with Alt+number
         bind "Alt 1" { GoToTab 1; }
         bind "Alt 2" { GoToTab 2; }
         bind "Alt 3" { GoToTab 3; }
@@ -34,86 +26,15 @@ keybinds clear-defaults=true {
         bind "Alt 8" { GoToTab 8; }
         bind "Alt 9" { GoToTab 9; }
         
-        // Session-manager navigation (when opened with Ctrl+t)
-        bind "Ctrl n" { FocusNextPane; }
-        bind "Ctrl p" { FocusPreviousPane; }
-    }
-    
-    tmux {
-        // Exit tmux mode
-        bind "Ctrl c" { SwitchToMode "normal"; }
-        bind "Esc" { SwitchToMode "normal"; }
+        // Quick mode switches
+        bind "Alt p" { SwitchToMode "pane"; }
+        bind "Alt t" { SwitchToMode "tab"; }
+        bind "Alt s" { SwitchToMode "scroll"; }
+        bind "Alt r" { SwitchToMode "resize"; }
         
-        // Pane operations (custom style)
-        bind "/" { NewPane "right"; SwitchToMode "normal"; }    // vertical split
-        bind "-" { NewPane "down"; SwitchToMode "normal"; }     // horizontal split
-        bind "x" { CloseFocus; SwitchToMode "normal"; }         // close pane
-        bind "z" { ToggleFocusFullscreen; SwitchToMode "normal"; } // zoom pane
-        bind "o" { FocusNextPane; SwitchToMode "normal"; }      // other pane
-        bind ";" { FocusPreviousPane; SwitchToMode "normal"; }  // previous pane
-        
-        // Alternative splits (vim-style)
-        bind "v" { NewPane "right"; SwitchToMode "normal"; }    // vertical split
-        bind "s" { NewPane "down"; SwitchToMode "normal"; }     // horizontal split
-        
-        // Navigation
-        bind "h" { MoveFocus "left"; SwitchToMode "normal"; }
-        bind "j" { MoveFocus "down"; SwitchToMode "normal"; }
-        bind "k" { MoveFocus "up"; SwitchToMode "normal"; }
-        bind "l" { MoveFocus "right"; SwitchToMode "normal"; }
-        
-        // Arrow keys navigation
-        bind "Left" { MoveFocus "left"; SwitchToMode "normal"; }
-        bind "Down" { MoveFocus "down"; SwitchToMode "normal"; }
-        bind "Up" { MoveFocus "up"; SwitchToMode "normal"; }
-        bind "Right" { MoveFocus "right"; SwitchToMode "normal"; }
-        
-        // Tab operations
-        bind "c" { NewTab; SwitchToMode "normal"; }          // create tab
-        bind "n" { GoToNextTab; SwitchToMode "normal"; }     // next tab
-        bind "p" { GoToPreviousTab; SwitchToMode "normal"; } // previous tab
-        bind "&" { CloseTab; SwitchToMode "normal"; }        // close tab
-        bind "," { SwitchToMode "renametab"; TabNameInput 0; } // rename tab
-        
-        // Window/Tab numbers (tmux-style)
-        bind "0" { GoToTab 10; SwitchToMode "normal"; }
-        bind "1" { GoToTab 1; SwitchToMode "normal"; }
-        bind "2" { GoToTab 2; SwitchToMode "normal"; }
-        bind "3" { GoToTab 3; SwitchToMode "normal"; }
-        bind "4" { GoToTab 4; SwitchToMode "normal"; }
-        bind "5" { GoToTab 5; SwitchToMode "normal"; }
-        bind "6" { GoToTab 6; SwitchToMode "normal"; }
-        bind "7" { GoToTab 7; SwitchToMode "normal"; }
-        bind "8" { GoToTab 8; SwitchToMode "normal"; }
-        bind "9" { GoToTab 9; SwitchToMode "normal"; }
-        
-        // Copy mode
-        bind "[" { SwitchToMode "scroll"; }
-        
-        // Detach
-        bind "d" { Detach; }
-        
-        // Resize mode
-        bind "r" { SwitchToMode "resize"; }
-        
-        // Session manager
-        bind "w" {
-            LaunchOrFocusPlugin "session-manager" {
-                floating true
-                move_to_focused_tab true
-            }
-            SwitchToMode "normal"
-        }
-        
-        // Reload config
-        bind "R" { 
-            // Zellijにはreload機能がないため、メッセージを表示
-            WriteChars "Please restart Zellij to reload config"; 
-            SwitchToMode "normal"; 
-        }
-        
-        // Show keybindings help
-        bind "?" { SwitchToMode "pane"; }
+        // Session management
+        bind "Alt d" { Detach; }
+        bind "Alt q" { Quit; }
     }
     
     locked {
@@ -324,35 +245,86 @@ keybinds clear-defaults=true {
         bind "Ctrl [" { UndoRenamePane; SwitchToMode "pane"; }
     }
     
-    session {
-        bind "Ctrl c" { SwitchToMode "normal"; }
+    shared_except "locked" {
+        bind "Ctrl g" { SwitchToMode "locked"; }
+        bind "Ctrl q" { Quit; }
+        
+        // Quick pane operations
+        bind "Alt n" { NewPane; }
+        bind "Alt x" { CloseFocus; }
+        bind "Alt f" { ToggleFloatingPanes; }
+        bind "Alt z" { ToggleFocusFullscreen; }
+        
+        // Quick resize
+        bind "Alt =" { Resize "Increase"; }
+        bind "Alt +" { Resize "Increase"; }
+        bind "Alt -" { Resize "Decrease"; }
+        
+        // Layout switching
+        bind "Alt [" { PreviousSwapLayout; }
+        bind "Alt ]" { NextSwapLayout; }
+        
+        // Additional Vim bindings
+        bind "Alt e" { EditScrollback; }
+        bind "Alt /" { SwitchToMode "entersearch"; SearchInput 0; }
+    }
+    
+    // Main tmux/screen mode - Ctrl+a prefix
+    tmux clear-defaults=true {
+        bind "Ctrl a" { Write 1; SwitchToMode "normal"; }  // Send literal Ctrl+a
         bind "Esc" { SwitchToMode "normal"; }
         bind "Ctrl [" { SwitchToMode "normal"; }
         bind "q" { SwitchToMode "normal"; }
+        bind "Ctrl g" { SwitchToMode "normal"; }
         
-        // vim風のナビゲーション
-        bind "j" { FocusNextPane; }
-        bind "k" { FocusPreviousPane; }
-        bind "h" { MoveFocus "left"; }
-        bind "l" { MoveFocus "right"; }
+        // Mode switches
+        bind "p" { SwitchToMode "pane"; }
+        bind "t" { SwitchToMode "tab"; }
+        bind "r" { SwitchToMode "resize"; }
+        bind "s" { SwitchToMode "scroll"; }
+        bind "S" { SwitchToMode "session"; }
+        bind "m" { SwitchToMode "move"; }
         
-        // Ctrl+N/P でのナビゲーション（session-manager用）
-        bind "Ctrl n" { FocusNextPane; }
-        bind "Ctrl p" { FocusPreviousPane; }
+        // Quick pane operations (Vim-style)
+        bind "v" { NewPane "right"; SwitchToMode "normal"; }   // vsplit
+        bind "h" { NewPane "down"; SwitchToMode "normal"; }    // hsplit (mnemonic: horizontal)
+        bind "x" { CloseFocus; SwitchToMode "normal"; }        // close pane
+        bind "z" { ToggleFocusFullscreen; SwitchToMode "normal"; }
+        bind "o" { FocusNextPane; }
         
-        // セッション管理
-        bind "Enter" { SwitchToMode "normal"; }
+        // Navigation
+        bind "H" { MoveFocus "left"; SwitchToMode "normal"; }
+        bind "J" { MoveFocus "down"; SwitchToMode "normal"; }
+        bind "K" { MoveFocus "up"; SwitchToMode "normal"; }
+        bind "L" { MoveFocus "right"; SwitchToMode "normal"; }
+        
+        // Tab operations
+        bind "c" { NewTab; SwitchToMode "normal"; }
+        bind "n" { GoToNextTab; SwitchToMode "normal"; }
+        bind "N" { GoToPreviousTab; SwitchToMode "normal"; }
+        bind "," { SwitchToMode "renametab"; }
+        bind "&" { CloseTab; SwitchToMode "normal"; }
+        
+        // Copy mode (Vim-style)
+        bind "[" { SwitchToMode "scroll"; }
+        
+        // Session operations
         bind "d" { Detach; }
-    }
-    
-    shared_except "locked" {
-        bind "Ctrl g" { SwitchToMode "locked"; }
-    }
-    
-    shared_among "normal" "pane" "tab" "resize" "move" "scroll" "session" {
-        // session-manager内でのCtrl+N/P操作（上下選択）
-        bind "Ctrl n" { FocusNextPane; }
-        bind "Ctrl p" { FocusPreviousPane; }
+        bind "D" { SwitchToMode "session"; }
+        
+        // Numbered tabs
+        bind "1" { GoToTab 1; SwitchToMode "normal"; }
+        bind "2" { GoToTab 2; SwitchToMode "normal"; }
+        bind "3" { GoToTab 3; SwitchToMode "normal"; }
+        bind "4" { GoToTab 4; SwitchToMode "normal"; }
+        bind "5" { GoToTab 5; SwitchToMode "normal"; }
+        bind "6" { GoToTab 6; SwitchToMode "normal"; }
+        bind "7" { GoToTab 7; SwitchToMode "normal"; }
+        bind "8" { GoToTab 8; SwitchToMode "normal"; }
+        bind "9" { GoToTab 9; SwitchToMode "normal"; }
+        
+        // Help
+        bind "?" { SwitchToMode "normal"; }
     }
 }
 
@@ -409,19 +381,12 @@ plugins {
     status-bar location="zellij:status-bar"
     strider location="zellij:strider"
     compact-bar location="zellij:compact-bar"
-    session-manager location="zellij:session-manager" {
-        // セッションマネージャーのキーバインド設定
-        move_focus_or_tab false
-        floating true
-        // セッションマネージャー内でのCtrl+n/pナビゲーション
-        handle_navigation_keys true
-    }
+    session-manager location="zellij:session-manager"
     welcome-screen location="zellij:session-manager" {
         welcome_screen true
     }
     filepicker location="zellij:strider" {
         cwd "/"
-        // ファイルピッカーでもCtrl+N/Pを使用
     }
 }
 

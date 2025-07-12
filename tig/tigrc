@@ -4,13 +4,13 @@
 # ============================================================================
 # View Settings
 # ============================================================================
-set main-view           = id:yes,color date:short author:full commit-title:graph=yes,refs=yes
-set blame-view          = id:yes,color date:short author:full line-number:yes,interval=1 text
-set tree-view           = date:short author:full id:yes,color file-size:units mode file-name
-set refs-view           = date:short author:full id:yes,color ref commit-title:graph=yes,refs=yes
-set stash-view          = date:short author:full id:yes,color commit-title:graph=yes,refs=yes
+set main-view           = id:yes,color date:default author:full commit-title:graph=yes,refs=yes
+set blame-view          = id:yes,color date:default author:full line-number:yes,interval=1 text
+set tree-view           = date:default author:full id:yes,color file-size:units mode file-name
+set refs-view           = date:default author:full id:yes,color ref commit-title:graph=yes,refs=yes
+set stash-view          = date:default author:full id:yes,color commit-title:graph=yes,refs=yes
 set status-view         = status:long file-name
-set log-view            = date:short author:full id:yes,color commit-title:graph=yes,refs=yes
+set log-view            = line-number:no,interval=5
 set reflog-view         = date:relative author:full id:yes,color commit-title:graph=yes,refs=yes
 
 # ============================================================================
@@ -54,7 +54,7 @@ color main-remote       yellow  default
 color main-tracked      yellow  default bold
 color main-head         cyan    default bold
 color main-ref          cyan    default
-color tree-file         default default
+color tree.file         default default
 
 # Diff colors
 color diff-header       yellow  default
@@ -89,7 +89,7 @@ bind generic    b       view-blame
 bind generic    r       view-refs
 bind generic    s       view-status
 bind generic    S       view-status
-bind generic    c       view-stage
+bind generic    C       view-stage
 bind generic    y       view-stash
 bind generic    h       view-help
 bind generic    p       view-pager
@@ -110,7 +110,7 @@ bind generic    N       find-prev
 
 # Actions
 bind generic    <Enter> enter
-bind generic    <Space> select
+bind generic    <Space> enter
 bind generic    <Ctrl-C> quit
 bind generic    <Esc>   quit
 bind generic    q       quit
@@ -133,10 +133,10 @@ bind generic    <SFwd>  scroll-page-down
 bind generic    e       edit
 bind generic    :       prompt
 bind generic    o       options
-bind generic    <Ctrl-Y> copy-commit-id
-bind generic    @       stage-next
-bind generic    !       status-revert
-bind generic    M       status-merge
+bind generic    <Ctrl-Y> !@sh -c "echo -n %(commit) | pbcopy"
+bind generic    @       :/^@@
+bind generic    !       !git checkout -- %(file)
+bind generic    M       !git merge %(branch)
 
 # Stage/Status specific
 bind status     u       status-update

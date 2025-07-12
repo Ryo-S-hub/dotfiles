@@ -115,3 +115,35 @@ if [[ -o interactive ]]; then
         eval "$(dircolors -b)"
     fi
 fi
+
+# ============================================================================
+# Terminal Multiplexer Auto-attach
+# ============================================================================
+# Tmux auto-attachment is disabled by default. Use manual session management.
+# Use 'tmj', 'proj', 'projz' commands to start tmux sessions
+
+# Zellij Auto-attach
+# ============================================================================
+# Auto-attach to zellij session on iTerm2 and Ghostty
+if [[ -o interactive ]] && [[ -z "$ZELLIJ" ]]; then
+    # Check if we're in iTerm2 or Ghostty
+    if [[ "$TERM_PROGRAM" == "iTerm.app" ]] || [[ "$TERM_PROGRAM" == "ghostty" ]] || [[ -n "$GHOSTTY_RESOURCES_DIR" ]]; then
+        # Check if zellij is installed
+        if command -v zellij >/dev/null 2>&1; then
+            # Set up exit trap to detach from zellij session (preserving it)
+            trap 'zellij detach' EXIT
+            
+            # Try to attach to the most recent session
+            # Get the most recent session (sorted by last attached time)
+            local session=$(zellij list-sessions 2>/dev/null | grep -v "EXITED" | head -n1 | awk '{print $1}')
+            
+            if [[ -n "$session" ]]; then
+                # Attach to the existing session
+                zellij attach "$session"
+            else
+                # No sessions exist, create a new one
+                zellij
+            fi
+        fi
+    fi
+fi

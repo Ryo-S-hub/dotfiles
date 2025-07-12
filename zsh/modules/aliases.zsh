@@ -13,7 +13,7 @@ alias ve='nvim ~/.config/zsh/.zshenv'
 alias vz='nvim ${XDG_CONFIG_HOME}/zsh/.zshrc'
 alias vv='nvim ${XDG_CONFIG_HOME}/nvim/init.lua'
 alias vg='nvim ${XDG_CONFIG_HOME}/git/config'
-alias vt='nvim ${XDG_CONFIG_HOME}/tmux/tmux.conf'
+alias vzl='nvim ${XDG_CONFIG_HOME}/zellij/config.kdl'
 alias vy='nvim ${XDG_CONFIG_HOME}/yazi/yazi.toml'
 
 # VSCode shortcuts
@@ -25,8 +25,6 @@ alias codeg='code ${XDG_CONFIG_HOME}/git/config'
 # Source shortcuts
 alias soe='source ~/.config/zsh/.zshenv'
 alias soz='source ${XDG_CONFIG_HOME}/zsh/.zshrc'
-alias sot='tmux source-file ${XDG_CONFIG_HOME}/tmux/tmux.conf'
-
 # Directory navigation
 alias which-command='whence'
 alias ..='cd ..'
@@ -48,7 +46,6 @@ command -v eza >/dev/null 2>&1 && {
 # Enhanced file operations
 command -v bat >/dev/null 2>&1 && alias cat='bat'
 command -v procs >/dev/null 2>&1 && alias ps='procs'
-command -v rg >/dev/null 2>&1 && alias grep='rg'
 command -v fd >/dev/null 2>&1 && alias find='fd'
 
 # ============================================================================
@@ -119,17 +116,28 @@ alias topm='procs --sortd mem --watch-interval 1'
 # ============================================================================
 # Session Management
 # ============================================================================
-alias tm='tmux'
-alias tmc='tmux -CC'
-alias tmk='tmux kill-server'
-
-# Zellij aliases (if available)
+# Zellij aliases
 command -v zellij >/dev/null 2>&1 && {
-    alias z='zellij'
     alias za='zellij attach'
     alias zl='zellij list-sessions'
     alias zk='zellij kill-session'
+    alias zs='zellij -s'
+    alias zka='zellij kill-all-sessions'
+    alias ide='zellij --layout ide'
+    alias dev='zellij --layout dev'
+    
+    # セッション管理ヘルパー
+    alias zsd='zellij delete-session'
+    alias zsda='zellij delete-all-sessions'
+    alias zsr='zellij run'
+    alias zac='zellij action'
 }
+
+# プロジェクト関連
+alias p='proj'        # 基本のプロジェクト切り替え
+alias pz='projz'      # 高機能版
+alias pr='projr'      # 最近のプロジェクトから選択
+alias w='work'        # 開発ワークフロー開始
 
 # ============================================================================
 # Interactive Tools
