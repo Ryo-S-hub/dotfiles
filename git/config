@@ -1,8 +1,7 @@
 [user]
 	name = Ryo-S-hub
 	email = wstone.notsw@gmail.com
-	# Uncomment and set if you want to sign commits
-	# signingkey = YOUR_GPG_KEY_ID
+	signingkey = E9EDA769514C2831
 
 [core]
 	autocrlf = input
@@ -121,10 +120,9 @@
 
 [commit]
 	template = /Users/shiraisr/.config/git/.commit_template
-	# Uncomment to require GPG signing
-	# gpgsign = true
 	# Show diff in commit message editor
 	verbose = true
+	gpgsign = true
 
 [branch]
 	autosetupmerge = always
