@@ -345,7 +345,8 @@ install_linux_packages() {
                [ -n "$RIPGREP_VERSION" ] && [ "$RIPGREP_VERSION" != "null" ]; then
                 # バージョンからvプレフィックスを除去
                 VERSION_NUMBER="${RIPGREP_VERSION#v}"
-                DOWNLOAD_URL="https://github.com/BurntSushi/ripgrep/releases/download/${RIPGREP_VERSION}/ripgrep_${VERSION_NUMBER}_amd64.deb"
+                # ripgrepの.debファイルには-1サフィックスが付く
+                DOWNLOAD_URL="https://github.com/BurntSushi/ripgrep/releases/download/${RIPGREP_VERSION}/ripgrep_${VERSION_NUMBER}-1_amd64.deb"
                 log "ripgrep ${RIPGREP_VERSION} をダウンロードしています..."
                 
                 if curl -fsSL "$DOWNLOAD_URL" -o /tmp/ripgrep.deb && \
