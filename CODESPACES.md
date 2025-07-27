@@ -132,35 +132,25 @@ df -h
 
 ## カスタマイズ
 
-### Codespaces専用設定
+### Codespaces設定
 
-`.github/codespaces/devcontainer.json` でCodespaces固有の設定を行えます：
+Codespacesの設定は以下の方法で行います：
 
-```json
-{
-  "containerEnv": {
-    "SKIP_NVIM_PLUGINS": "true",
-    "CUSTOM_SETTING": "value"
-  },
-  "postCreateCommand": "echo 'Custom setup command'"
-}
+1. **GitHub Settings経由**:
+   - Settings → Codespaces → Repository access
+   - 環境変数の設定: Codespaces secrets
+
+2. **プロジェクト固有の設定**:
+   - 各プロジェクトで独自に`.devcontainer/devcontainer.json`を作成
+   - dotfilesリポジトリではなく、プロジェクトリポジトリで管理
+
+### 環境変数設定
+
+GitHub Settings → Codespaces → Secretsで以下を設定：
+
 ```
-
-### VS Code拡張機能
-
-Codespacesで自動インストールする拡張機能を設定：
-
-```json
-{
-  "customizations": {
-    "vscode": {
-      "extensions": [
-        "ms-vscode.vscode-json",
-        "GitHub.copilot"
-      ]
-    }
-  }
-}
+SKIP_NVIM_PLUGINS=true
+DEBUG=false
 ```
 
 ## 更新とメンテナンス
