@@ -184,14 +184,8 @@
 
 # URL shortcuts for common repositories
 [url "git@github.com:"]
-	insteadOf = https://github.com/
-	insteadOf = github:
-	insteadOf = gh:
 
 [url "git@gitlab.com:"]
-	insteadOf = https://gitlab.com/
-	insteadOf = gitlab:
-	insteadOf = gl:
 
 # Enhanced aliases
 [alias]
@@ -285,3 +279,7 @@
 	oops = commit --amend --no-edit
 	fix = "!f() { git commit --fixup=$1; }; f"
 	squash = "!f() { git commit --squash=$1; }; f"
+[url "https://github.com/"]
+	insteadOf = git@github.com:
+[url "https://gitlab.com/"]
+	insteadOf = git@gitlab.com:

@@ -632,6 +632,25 @@ if ! command -v uv &> /dev/null; then
 fi
 
 # =============================================================================
+# Git設定の修正（Codespaces環境でのSSH/HTTPS問題解決）
+# =============================================================================
+if is_codespaces || is_vscode_server; then
+    log "Codespaces環境でのGit設定を修正しています..."
+    
+    # 既存の矛盾するURL設定をクリア
+    git config --global --unset-all url.git@github.com:.insteadof 2>/dev/null || true
+    git config --global --unset-all url.git@gitlab.com:.insteadof 2>/dev/null || true
+    
+    # HTTPS強制設定（SSH認証不要）
+    git config --global url."https://github.com/".insteadOf "git@github.com:"
+    git config --global url."https://github.com/".insteadOf "ssh://git@github.com/"
+    git config --global url."https://gitlab.com/".insteadOf "git@gitlab.com:"
+    git config --global url."https://gitlab.com/".insteadOf "ssh://git@gitlab.com/"
+    
+    log "HTTPS強制設定を適用しました（SSH認証不要）"
+fi
+
+# =============================================================================
 # dotfilesの配置
 # =============================================================================
 log "dotfilesを配置しています..."
