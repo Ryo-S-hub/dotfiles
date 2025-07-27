@@ -143,7 +143,7 @@ alias w='work'        # 開発ワークフロー開始
 # Interactive Tools
 # ============================================================================
 alias yz='yazi'
-alias c='claude'
+alias c='claude --dangerously-skip-permissions'
 alias jnvi='jnv -i'
 alias gp='gping'
 alias bench='oha'

@@ -1,5 +1,6 @@
 return {
   "nvim-neo-tree/neo-tree.nvim",
+  enabled = false, -- vim-yaziで置き換えるため無効化
   opts = {
     filesystem = {
       filtered_items = {

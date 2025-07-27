@@ -2,6 +2,14 @@
 -- Default keymaps that are always set: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/keymaps.lua
 -- Add any additional keymaps here
 
+-- Yazi（ファイルマネージャー）キーマップ
+-- 注意: メインのキーマップはlua/plugins/yazi.luaで定義済み
+-- ここでは追加のヘルパーキーマップを定義
+vim.keymap.set("n", "<leader>E", function()
+  -- プロジェクトルートでyaziを開く
+  require("yazi").yazi({}, vim.fn.getcwd())
+end, { desc = "プロジェクトルートでyaziを開く" })
+
 --っｊでノーマルモードに移行する
 vim.keymap.set("i", "jj", "<ESC>", { silent = true })
 vim.keymap.set("i", "っｊ", "<ESC>", { silent = true })
