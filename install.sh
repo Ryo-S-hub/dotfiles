@@ -321,12 +321,18 @@ install_linux_packages() {
     if ! command -v nvim &> /dev/null; then
         log "Neovimをインストールしています..."
         if [ "$ARCH" = "amd64" ]; then
-            curl -fsSL https://github.com/neovim/neovim/releases/latest/download/nvim-linux64.tar.gz | \
-                sudo tar -C /opt -xzf -
-            sudo ln -sf /opt/nvim-linux64/bin/nvim /usr/local/bin/nvim
+            # 正しいURLでNeovimをダウンロード
+            if curl -fsSL https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.tar.gz | \
+                sudo tar -C /opt -xzf - && \
+                sudo ln -sf /opt/nvim-linux-x86_64/bin/nvim /usr/local/bin/nvim; then
+                log "Neovimのインストールが完了しました"
+            else
+                warning "Neovimのダウンロードに失敗しました。aptからインストールを試行します..."
+                sudo apt-get install -y neovim || warning "Neovimのインストールに失敗しました"
+            fi
         else
             # ARM64の場合はaptから
-            sudo apt-get install -y neovim
+            sudo apt-get install -y neovim || warning "Neovimのインストールに失敗しました"
         fi
     fi
     
@@ -334,12 +340,18 @@ install_linux_packages() {
     if ! command -v rg &> /dev/null; then
         log "ripgrepをインストールしています..."
         if [ "$ARCH" = "amd64" ]; then
-            RIPGREP_VERSION=$(curl -s https://api.github.com/repos/BurntSushi/ripgrep/releases/latest | grep -Po '"tag_name": "\K[^"]*')
-            curl -fsSL "https://github.com/BurntSushi/ripgrep/releases/download/${RIPGREP_VERSION}/ripgrep_${RIPGREP_VERSION#v}_amd64.deb" -o /tmp/ripgrep.deb
-            sudo dpkg -i /tmp/ripgrep.deb
-            rm /tmp/ripgrep.deb
+            if RIPGREP_VERSION=$(curl -s https://api.github.com/repos/BurntSushi/ripgrep/releases/latest | grep -Po '"tag_name": "\K[^"]*') && \
+               curl -fsSL "https://github.com/BurntSushi/ripgrep/releases/download/${RIPGREP_VERSION}/ripgrep_${RIPGREP_VERSION#v}_amd64.deb" -o /tmp/ripgrep.deb && \
+               sudo dpkg -i /tmp/ripgrep.deb; then
+                rm -f /tmp/ripgrep.deb
+                log "ripgrepのインストールが完了しました"
+            else
+                rm -f /tmp/ripgrep.deb
+                warning "ripgrepのダウンロードに失敗しました。aptからインストールを試行します..."
+                sudo apt-get install -y ripgrep || warning "ripgrepのインストールに失敗しました"
+            fi
         else
-            sudo apt-get install -y ripgrep
+            sudo apt-get install -y ripgrep || warning "ripgrepのインストールに失敗しました"
         fi
     fi
     
@@ -347,13 +359,22 @@ install_linux_packages() {
     if ! command -v fd &> /dev/null; then
         log "fd-findをインストールしています..."
         if [ "$ARCH" = "amd64" ]; then
-            FD_VERSION=$(curl -s https://api.github.com/repos/sharkdp/fd/releases/latest | grep -Po '"tag_name": "v\K[^"]*')
-            curl -fsSL "https://github.com/sharkdp/fd/releases/download/v${FD_VERSION}/fd_${FD_VERSION}_amd64.deb" -o /tmp/fd.deb
-            sudo dpkg -i /tmp/fd.deb
-            rm /tmp/fd.deb
+            if FD_VERSION=$(curl -s https://api.github.com/repos/sharkdp/fd/releases/latest | grep -Po '"tag_name": "v\K[^"]*') && \
+               curl -fsSL "https://github.com/sharkdp/fd/releases/download/v${FD_VERSION}/fd_${FD_VERSION}_amd64.deb" -o /tmp/fd.deb && \
+               sudo dpkg -i /tmp/fd.deb; then
+                rm -f /tmp/fd.deb
+                log "fd-findのインストールが完了しました"
+            else
+                rm -f /tmp/fd.deb
+                warning "fd-findのダウンロードに失敗しました。aptからインストールを試行します..."
+                sudo apt-get install -y fd-find && sudo ln -sf /usr/bin/fdfind /usr/local/bin/fd || warning "fd-findのインストールに失敗しました"
+            fi
         else
-            sudo apt-get install -y fd-find
-            sudo ln -sf /usr/bin/fdfind /usr/local/bin/fd
+            if sudo apt-get install -y fd-find; then
+                sudo ln -sf /usr/bin/fdfind /usr/local/bin/fd || true
+            else
+                warning "fd-findのインストールに失敗しました"
+            fi
         fi
     fi
     
@@ -368,12 +389,18 @@ install_linux_packages() {
     if ! command -v bat &> /dev/null; then
         log "batをインストールしています..."
         if [ "$ARCH" = "amd64" ]; then
-            BAT_VERSION=$(curl -s https://api.github.com/repos/sharkdp/bat/releases/latest | grep -Po '"tag_name": "v\K[^"]*')
-            curl -fsSL "https://github.com/sharkdp/bat/releases/download/v${BAT_VERSION}/bat_${BAT_VERSION}_amd64.deb" -o /tmp/bat.deb
-            sudo dpkg -i /tmp/bat.deb
-            rm /tmp/bat.deb
+            if BAT_VERSION=$(curl -s https://api.github.com/repos/sharkdp/bat/releases/latest | grep -Po '"tag_name": "v\K[^"]*') && \
+               curl -fsSL "https://github.com/sharkdp/bat/releases/download/v${BAT_VERSION}/bat_${BAT_VERSION}_amd64.deb" -o /tmp/bat.deb && \
+               sudo dpkg -i /tmp/bat.deb; then
+                rm -f /tmp/bat.deb
+                log "batのインストールが完了しました"
+            else
+                rm -f /tmp/bat.deb
+                warning "batのダウンロードに失敗しました。aptからインストールを試行します..."
+                sudo apt-get install -y bat || warning "batのインストールに失敗しました"
+            fi
         else
-            sudo apt-get install -y bat
+            sudo apt-get install -y bat || warning "batのインストールに失敗しました"
         fi
     fi
     
