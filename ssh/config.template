@@ -1,0 +1,35 @@
+# SSH設定テンプレート
+# このファイルを ~/.ssh/config にコピーして使用してください
+# 秘密鍵は手動でセットアップする必要があります
+
+# 全体的な設定
+Host *
+  AddKeysToAgent yes
+  UseKeychain yes
+  IdentitiesOnly yes
+  ServerAliveInterval 60
+  ServerAliveCountMax 10
+
+# GitHub用の設定
+Host github.com
+  HostName github.com
+  User git
+  IdentityFile ~/.ssh/id_rsa
+  AddKeysToAgent yes
+  UseKeychain yes
+
+# GitLab用の設定（必要に応じて）
+Host gitlab.com
+  HostName gitlab.com
+  User git
+  IdentityFile ~/.ssh/id_rsa
+  AddKeysToAgent yes
+  UseKeychain yes
+
+# カスタムホスト設定の例
+# Host myserver
+#   HostName example.com
+#   User myuser
+#   Port 22
+#   IdentityFile ~/.ssh/id_rsa
+#   ForwardAgent yes
