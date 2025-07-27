@@ -51,6 +51,14 @@ is_codespaces() {
     [ -n "${CODESPACES:-}" ] && [ "${CODESPACES}" = "true" ]
 }
 
+is_vscode_server() {
+    [ -n "${VSCODE_IPC_HOOK_CLI:-}" ] || [ -n "${VSCODE_GIT_ASKPASS_NODE:-}" ] || [ -d "/workspaces" ]
+}
+
+is_remote_container() {
+    [ -f "/.dockerenv" ] || [ -n "${REMOTE_CONTAINERS:-}" ]
+}
+
 OS=$(detect_os)
 ARCH=$(detect_arch)
 
@@ -60,6 +68,10 @@ log "OS: $OS"
 log "Architecture: $ARCH"
 if is_codespaces; then
     log "Environment: GitHub Codespaces"
+elif is_vscode_server; then
+    log "Environment: VS Code Server"
+elif is_remote_container; then
+    log "Environment: Remote Container"
 else
     log "Environment: Local"
 fi
@@ -86,6 +98,10 @@ DOTFILES_TARGET="$HOME/.config"
 # dotfilesが正しい場所にあるか確認
 if [ ! -d "$DOTFILES_SOURCE" ]; then
     error "dotfilesディレクトリが見つかりません: $DOTFILES_SOURCE"
+    if is_codespaces; then
+        error "Codespacesで dotfiles が正しく設定されていない可能性があります。"
+        error "設定手順: Settings → Codespaces → 'Automatically install dotfiles' を有効化"
+    fi
     exit 1
 fi
 
@@ -181,34 +197,59 @@ install_macos_packages() {
 install_linux_packages() {
     log "Linux用のパッケージをインストールしています..."
     
-    # 一時的にsudoパスワードなしで実行できるようにする（Codespaces用）
-    if is_codespaces; then
+    # 一時的にsudoパスワードなしで実行できるようにする（リモート環境用）
+    if is_codespaces || is_vscode_server || is_remote_container; then
         export SUDO_ASKPASS=/bin/true
+        export DEBIAN_FRONTEND=noninteractive
     fi
     
     # システムパッケージの更新
     log "システムパッケージを更新しています..."
-    sudo apt-get update -qq
+    if ! sudo apt-get update -qq; then
+        warning "パッケージリストの更新に失敗しました。ネットワーク接続を確認してください。"
+        # 一定時間待ってリトライ
+        sleep 5
+        sudo apt-get update -qq || {
+            error "パッケージリストの更新に失敗しました。インストールを続行できません。"
+            exit 1
+        }
+    fi
     
     log "基本的なパッケージをインストールしています..."
-    sudo apt-get install -y -qq \
-        curl \
-        wget \
-        git \
-        build-essential \
-        software-properties-common \
-        apt-transport-https \
-        ca-certificates \
-        gnupg \
-        lsb-release \
-        unzip \
-        jq \
-        htop \
-        tree \
-        tmux \
-        zsh \
-        python3-pip \
-        python3-venv
+    
+    # 基本パッケージ（軽量化）
+    if is_codespaces || is_vscode_server; then
+        # Codespaces/VS Code Server用の軽量パッケージセット
+        sudo apt-get install -y -qq \
+            curl \
+            wget \
+            git \
+            unzip \
+            jq \
+            tree \
+            zsh \
+            python3-pip || true
+    else
+        # フル機能パッケージセット
+        sudo apt-get install -y -qq \
+            curl \
+            wget \
+            git \
+            build-essential \
+            software-properties-common \
+            apt-transport-https \
+            ca-certificates \
+            gnupg \
+            lsb-release \
+            unzip \
+            jq \
+            htop \
+            tree \
+            tmux \
+            zsh \
+            python3-pip \
+            python3-venv || true
+    fi
     
     # Neovimのインストール
     if ! command -v nvim &> /dev/null; then
@@ -472,8 +513,25 @@ fi
 if [ -d "$DOTFILES_TARGET/git" ]; then
     log "Git設定をリンクしています..."
     mkdir -p "$HOME/.config/git"
-    ln -sf "$DOTFILES_TARGET/git/config" "$HOME/.config/git/config"
-    ln -sf "$DOTFILES_TARGET/git/ignore" "$HOME/.config/git/ignore"
+    
+    # config.templateがある場合は、それをベースに設定
+    if [ -f "$DOTFILES_TARGET/git/config.template" ] && [ ! -f "$HOME/.config/git/config" ]; then
+        log "Git設定テンプレートから設定を作成しています..."
+        cp "$DOTFILES_TARGET/git/config.template" "$HOME/.config/git/config"
+        warning "Git設定ファイルをテンプレートから作成しました。"
+        warning "以下のコマンドで個人情報を設定してください："
+        warning "  git config --global user.name \"Your Name\""
+        warning "  git config --global user.email \"your@email.com\""
+        warning "  git config --global user.signingkey \"YOUR_GPG_KEY_ID\""
+    elif [ -f "$DOTFILES_TARGET/git/config" ]; then
+        # 既存のconfigファイルがある場合（後方互換性）
+        ln -sf "$DOTFILES_TARGET/git/config" "$HOME/.config/git/config"
+    fi
+    
+    # gitignoreはそのままリンク
+    if [ -f "$DOTFILES_TARGET/git/ignore" ]; then
+        ln -sf "$DOTFILES_TARGET/git/ignore" "$HOME/.config/git/ignore"
+    fi
 fi
 
 # Neovim設定のシンボリックリンク
@@ -511,13 +569,18 @@ fi
 
 # GPG設定（存在する場合）
 if [ -f "$DOTFILES_TARGET/gnupg/gpg-agent.conf" ]; then
-    log "GPG設定を配置しています..."
-    mkdir -p "$HOME/.gnupg"
-    chmod 700 "$HOME/.gnupg"
-    if [ ! -f "$HOME/.gnupg/gpg-agent.conf" ]; then
-        cp "$DOTFILES_TARGET/gnupg/gpg-agent.conf" "$HOME/.gnupg/gpg-agent.conf"
-        chmod 600 "$HOME/.gnupg/gpg-agent.conf"
-        log "GPG Agent設定を配置しました。"
+    # Codespacesや軽量環境ではGPGサービスをスキップ
+    if is_codespaces || is_vscode_server; then
+        info "Codespaces/VS Code Server環境のため、GPG設定をスキップしています..."
+    else
+        log "GPG設定を配置しています..."
+        mkdir -p "$HOME/.gnupg"
+        chmod 700 "$HOME/.gnupg"
+        if [ ! -f "$HOME/.gnupg/gpg-agent.conf" ]; then
+            cp "$DOTFILES_TARGET/gnupg/gpg-agent.conf" "$HOME/.gnupg/gpg-agent.conf"
+            chmod 600 "$HOME/.gnupg/gpg-agent.conf"
+            log "GPG Agent設定を配置しました。"
+        fi
     fi
 fi
 
@@ -570,8 +633,15 @@ log "追加の設定を行っています..."
 
 # Neovimプラグインのインストール
 if command -v nvim &> /dev/null && [ -d "$HOME/.config/nvim" ]; then
-    log "Neovimプラグインをインストールしています..."
-    nvim --headless "+Lazy! sync" +qa || true
+    # Codespacesでは軽量化のためプラグインインストールをスキップするオプション
+    if is_codespaces && [ "${SKIP_NVIM_PLUGINS:-false}" = "true" ]; then
+        info "SKIP_NVIM_PLUGINS=trueのため、Neovimプラグインのインストールをスキップしています..."
+    else
+        log "Neovimプラグインをインストールしています..."
+        timeout 300 nvim --headless "+Lazy! sync" +qa || {
+            warning "Neovimプラグインのインストールがタイムアウトまたは失敗しました"
+        }
+    fi
 fi
 
 # =============================================================================
@@ -583,10 +653,27 @@ log "次のステップ："
 log "1. 新しいターミナルを開くか、以下のコマンドを実行してzshを起動してください："
 log "   exec zsh"
 log ""
+
 if [ "$OS" = "macos" ]; then
     log "2. macOS固有の設定："
     log "   - Karabiner-Elementsを起動して設定を有効化"
     log "   - iTerm2の設定を反映するには再起動が必要"
+elif is_codespaces; then
+    log "2. Codespaces固有の設定："
+    log "   - Git個人設定が必要です："
+    log "     git config --global user.name \"Your Name\""
+    log "     git config --global user.email \"your@email.com\""
+    log "   - GitHub CLI認証が必要です："
+    log "     gh auth login"
+    if [ "${SKIP_NVIM_PLUGINS:-false}" = "true" ]; then
+        log "   - Neovimプラグインは手動でインストールしてください："
+        log "     nvim +\"Lazy! sync\" +qa"
+    fi
+fi
+
+# エラーまたは警告があった場合の案内
+if [ -f "/tmp/dotfiles_warnings.log" ]; then
+    warning "セットアップ中に警告がありました。詳細は /tmp/dotfiles_warnings.log を確認してください。"
 fi
 
 # デバッグ情報の出力
