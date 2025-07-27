@@ -200,6 +200,35 @@ code --list-extensions
    brew update
    ```
 
+## セキュリティ注意事項
+
+⚠️ **重要**: このdotfilesリポジトリは公開前にセキュリティ対策が施されています。
+
+### 除外されている機密情報
+
+以下の情報は自動的に除外されており、手動でセットアップする必要があります：
+
+1. **Git個人設定**: `git/config`は除外されており、`git/config.template`を使用
+2. **SSH鍵**: すべてのSSH秘密鍵は除外
+3. **GPG鍵**: GPG秘密鍵関連ファイルは除外
+4. **認証トークン**: API トークン、パスワード、認証情報は除外
+5. **クラウドサービス設定**: AWS、GCP、Azure の認証情報は除外
+
+### 公開前のチェックリスト
+
+dotfilesを公開する前に以下を確認してください：
+
+```bash
+# 機密情報が含まれていないかチェック
+git log --patch | grep -i -E "(password|token|key|secret|credential)"
+
+# 個人情報が含まれていないかチェック
+grep -r -i "YOUR_ACTUAL_NAME\|YOUR_ACTUAL_EMAIL" .
+
+# .gitignoreが正しく機能しているか確認
+git status --ignored
+```
+
 ## 環境確認コマンド
 
 セットアップが正常に完了したかを確認するためのコマンド：
@@ -217,8 +246,10 @@ command -v pnpm && echo "✓ pnpm $(pnpm --version)"
 command -v bun && echo "✓ bun $(bun --version)"
 command -v deno && echo "✓ deno $(deno --version)"
 
-# Git設定の確認
+# Git設定の確認（個人情報がテンプレートのままでないか確認）
 git config --global --list | grep user
+git config --global user.name | grep -v "YOUR_NAME_HERE" || echo "⚠️ Git名前設定が必要"
+git config --global user.email | grep -v "YOUR_EMAIL_HERE" || echo "⚠️ Gitメール設定が必要"
 
 # SSH接続テスト
 ssh -T git@github.com

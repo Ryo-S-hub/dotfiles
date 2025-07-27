@@ -1,0 +1,287 @@
+[user]
+	name = YOUR_NAME_HERE
+	email = YOUR_EMAIL_HERE
+	signingkey = YOUR_GPG_KEY_ID_HERE
+
+[core]
+	autocrlf = input
+	quotepath = false
+	ignorecase = false
+	excludesfile = ~/.config/git/ignore
+	precomposeunicode = true
+	safecrlf = true
+	pager = delta
+	hooksPath = .husky
+	# Performance optimizations
+	preloadindex = true
+	fscache = true
+	# Security
+	trustctime = false
+  # 大きなリポジトリでの高速化
+	untrackedCache = true
+  fsmonitor = true
+
+[index]
+  # インデックス操作の高速化
+  version = 4
+  recordEndOfIndexEntries = true
+
+[pager]
+	diff = delta
+	log = delta
+	reflog = delta
+	show = delta
+	blame = delta
+
+[blame]
+  # より詳細なblame情報
+  markIgnoredLines = true
+  markUnblamableLines = true
+
+[diff]
+	colorMoved = default
+	algorithm = histogram
+	submodule = log
+	# Better rename detection
+	renames = copies
+	# Show word-level diff for better readability
+	compactionHeuristic = true
+
+[delta]
+	side-by-side = true
+	line-numbers = true
+	keep-plus-minus-markers = true
+	plus-style = "syntax #012800"
+	minus-style = "syntax #340001"
+	syntax-theme = Monokai Extended
+	navigate = true
+	# Better file headers
+	file-style = bold yellow ul
+	file-decoration-style = none
+	hunk-header-decoration-style = cyan box ul
+
+[interactive]
+	diffFilter = delta --color-only
+
+[ghq]
+	root = ~/dev
+
+[color]
+	ui = auto
+	status = auto
+	diff = auto
+	branch = auto
+	interactive = auto
+	grep = auto
+
+[status]
+	showUntrackedFiles = all
+	# Show summary of submodule changes
+	submoduleSummary = true
+
+[merge]
+	ff = false
+	conflictStyle = zdiff3
+	# Use better merge driver for common files
+	tool = vimdiff
+	# Automatically resolve conflicts for certain file types
+	renameLimit = 5000
+
+[init]
+	defaultBranch = main
+
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
+
+[pull]
+	ff = only
+	rebase = true
+
+[fetch]
+	prune = true
+	pruneTags = true
+	# Parallel fetching for better performance
+	parallel = 0
+
+[rebase]
+	autostash = true
+	autosquash = true
+	# Interactive rebase with better editor
+	instructionFormat = "(%an <%ae>) %s"
+	updateRefs = true
+
+[grep]
+	lineNumber = true
+	# Enable extended regexp
+	extendedRegexp = true
+
+[commit]
+	template = ~/.config/git/.commit_template
+	# Show diff in commit message editor
+	verbose = true
+	gpgsign = true
+
+[branch]
+	autosetupmerge = always
+	autosetupRebase = always
+
+[push]
+	default = current
+	autoSetupRemote = true
+	# Push tags automatically
+	followTags = true
+	# Use lease for safer force pushing
+	useForceIfIncludes = true
+
+[rerere]
+	enabled = true
+	# Auto-update rerere database
+	autoupdate = true
+
+# Security settings
+[protocol]
+	# Disable insecure protocols
+	allow = never
+[protocol "file"]
+	allow = always
+[protocol "git"]
+	allow = always
+[protocol "ssh"]
+	allow = always
+[protocol "https"]
+	allow = always
+
+# Performance settings
+[gc]
+	auto = 256
+	# Enable background maintenance
+	autopacklimit = 50
+
+[maintenance]
+	repo = ~/dev
+	strategy = incremental
+
+# Column output for better readability
+[column]
+	ui = auto
+	branch = auto
+	status = auto
+	tag = auto
+
+# Better log format
+[log]
+	date = iso
+	# Show signatures in log
+	showSignature = false
+
+# Submodule settings
+[submodule]
+	recurse = true
+	fetchJobs = 4
+
+# URL shortcuts for common repositories
+[url "git@github.com:"]
+	insteadOf = https://github.com/
+	insteadOf = github:
+	insteadOf = gh:
+
+[url "git@gitlab.com:"]
+	insteadOf = https://gitlab.com/
+	insteadOf = gitlab:
+	insteadOf = gl:
+
+# Enhanced aliases
+[alias]
+	# Basic shortcuts
+	s = status --short --branch
+	st = status
+	co = checkout
+	br = branch
+	ci = commit
+	d = diff
+	dc = diff --cached
+	
+	# Add shortcuts
+	a = add
+	aa = add --all
+	ap = add --patch
+	
+	# Commit shortcuts
+	c = commit
+	ca = commit --amend
+	can = commit --amend --no-edit
+	cm = commit -m
+	cma = commit --all -m
+	
+	# Log shortcuts
+	l = log --oneline
+	lg = log --oneline --graph --decorate
+	ll = log --graph --pretty=format:'%C(yellow)%h%C(cyan)%d%Creset %s %C(white)- %an, %ar%Creset'
+	lol = log --graph --decorate --pretty=oneline --abbrev-commit
+	lola = log --graph --decorate --pretty=oneline --abbrev-commit --all
+	
+	# Diff shortcuts
+	ds = diff --stat
+	dw = diff --word-diff
+	
+	# Push/Pull shortcuts
+	p = push
+	pf = push --force-with-lease
+	pu = push --set-upstream origin HEAD
+	pl = pull
+	pr = pull --rebase
+	
+	# Branch management
+	bd = branch -d
+	bD = branch -D
+	bm = branch -m
+	
+	# Stash shortcuts
+	st = stash
+	stp = stash pop
+	stl = stash list
+	sts = stash show
+	
+	# Reset shortcuts
+	unstage = reset HEAD --
+	undo = reset --soft HEAD~1
+	hard-reset = reset --hard HEAD~1
+	
+	# Remote shortcuts
+	r = remote
+	rv = remote -v
+	ra = remote add
+	rr = remote remove
+	
+	# Advanced commands
+	find-merge = "!sh -c 'commit=$0 && branch=${1:-HEAD} && (git rev-list $commit..$branch --ancestry-path | cat -n; git rev-list $commit..$branch --first-parent | cat -n) | sort -k2 -s | uniq -f1 -d | sort -n | tail -1 | cut -f2'"
+	show-ignored = "!git clean -ndX"
+	cleanup = "!git branch --merged | grep -v '\\*\\|master\\|main\\|develop' | xargs -n 1 git branch -d"
+	
+	# Sync shortcuts
+	sync = !git fetch origin && git rebase @{u}
+	sync-main = !git fetch origin && git rebase origin/main
+	update = !git fetch --all --prune && git merge --ff-only @{u}
+	
+	# History and file tracking
+	who = shortlog -sn
+	whois = "!sh -c 'git log -i --pretty=\"format:%an <%ae>\" --author=\"$1\" | sort -u' -"
+	whatis = show -s --pretty='tformat:%h (%s, %ad)' --date=short
+	file-history = log --follow -p --
+	
+	# Working directory state
+	save = !git add -A && git commit -m 'SAVEPOINT'
+	wip = !git add -u && git commit -m "WIP"
+	wipe = !git add -A && git commit -qm 'WIPE SAVEPOINT' && git reset HEAD~1 --hard
+	
+	# Useful queries
+	contributors = shortlog --summary --numbered
+	rank = shortlog -sn --no-merges
+	
+	# Quick fixes
+	oops = commit --amend --no-edit
+	fix = "!f() { git commit --fixup=$1; }; f"
+	squash = "!f() { git commit --squash=$1; }; f"

@@ -1,17 +1,112 @@
-.claude/
+# Claude Code関連
+.claude/.claude.json
+.claude/todos/
+.claude/projects/
+.claude/ide/
+.claude/statsig/
+
+# システム関連
 .DS_Store
+.Trash/
+.thumbnails/
+
+# 機密情報・認証関連
+**/*.pem
+**/*.key
+**/*.crt
+**/*.p12
+**/*.pfx
+**/id_rsa*
+**/id_ed25519*
+**/id_ecdsa*
+**/.env
+**/.env.*
+!**/.env.example
+!**/.env.template
+**/*_key
+**/*_secret
+**/password*
+**/credentials*
+**/token*
+
+# SSH関連
+**/.ssh/id_*
+**/.ssh/known_hosts*
+**/.ssh/authorized_keys*
+
+# GPG関連
+**/.gnupg/private-keys-v1.d/
+**/.gnupg/openpgp-revocs.d/
+**/.gnupg/trustdb.gpg
+**/.gnupg/pubring.gpg*
+**/.gnupg/secring.gpg*
+**/.gnupg/S.gpg-agent*
+**/.gnupg/S.keyboxd*
+**/.gnupg/S.scdaemon*
+
+# クラウドサービス認証
+aws/credentials
+aws/config
+gcloud/
+azure/
+docker/config.json
+github-copilot/
+
+# アプリケーション固有のデータ/設定
 aerospace/
 claude/
 crossnote/
 dlv/
-docker/
-gcloud/
-github-copilot/
 htop/
 jgit/
 raycast/
 rest-client/
 Unreal Engine/
 uv/
-zsh/.zsh_sessions
+.bun/
+.cache/
+.lemminx/
+.storybook/
+.thumbnails/
+.TranslationPlugin/
+.venv/
+.BurpSuite/
+.cursor/
+.expo/
+.jitera/
+.kiro/
+.mcp-auth/
+.swiftpm/
+.terraform.d/
+.w3m/
+
+# ログファイル
+**/*.log
+**/logs/
+**/.logs/
+
+# 一時ファイル
+**/tmp/
+**/temp/
+**/.tmp/
+**/.temp/
+
+# Node.js関連
+**/node_modules/
+**/.npm/
+**/.yarn/
+**/.pnpm-store/
+
+# 言語/ツール固有
+zsh/.zsh_sessions/
+zsh/.zsh_history
+zsh/.zcompdump*
 karabiner/automatic_backups/
+**/.vscode/extensions/
+**/.vscode-server/
+**/.local/share/
+**/.config/configstore/
+**/.config/gh/hosts.yml
+
+# Git設定から個人情報を除去
+git/config

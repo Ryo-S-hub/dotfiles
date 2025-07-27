@@ -1,0 +1,10 @@
+# GitHub CLI hosts configuration template
+# This file will be automatically configured when you run 'gh auth login'
+# You can also manually add hosts here
+
+github.com:
+    git_protocol: https
+    # The user field will be populated after authentication
+    # users:
+    #     YOUR_GITHUB_USERNAME:
+    # user: YOUR_GITHUB_USERNAME
