@@ -51,6 +51,27 @@ is_codespaces() {
     [ -n "${CODESPACES:-}" ] && [ "${CODESPACES}" = "true" ]
 }
 
+# Codespaces環境の詳細情報をデバッグ出力
+debug_codespaces_environment() {
+    if is_codespaces; then
+        log "=== Codespaces環境デバッグ情報 ==="
+        log "主要環境変数:"
+        log "  CODESPACES: ${CODESPACES:-未設定}"
+        log "  GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN: ${GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN:-未設定}"
+        log "  GITHUB_REPOSITORY: ${GITHUB_REPOSITORY:-未設定}"
+        log "  GITHUB_USER: ${GITHUB_USER:-未設定}"
+        log ""
+        log "ディレクトリ構造:"
+        log "  HOME: $HOME"
+        log "  PWD: $(pwd)"
+        log "  /workspaces: $(ls -la /workspaces 2>/dev/null || echo '存在しません')"
+        if [ -d "/workspaces/.codespaces" ]; then
+            log "  /workspaces/.codespaces: $(ls -la /workspaces/.codespaces 2>/dev/null || echo 'アクセスできません')"
+        fi
+        log "================================"
+    fi
+}
+
 is_vscode_server() {
     [ -n "${VSCODE_IPC_HOOK_CLI:-}" ] || [ -n "${VSCODE_GIT_ASKPASS_NODE:-}" ] || [ -d "/workspaces" ]
 }
@@ -68,6 +89,11 @@ log "OS: $OS"
 log "Architecture: $ARCH"
 if is_codespaces; then
     log "Environment: GitHub Codespaces"
+    log "詳細環境情報:"
+    log "  CODESPACES: ${CODESPACES:-未設定}"
+    log "  GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN: ${GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN:-未設定}"
+    log "  GITHUB_REPOSITORY: ${GITHUB_REPOSITORY:-未設定}"
+    log "  VSCODE_GIT_ASKPASS_NODE: ${VSCODE_GIT_ASKPASS_NODE:-未設定}"
 elif is_vscode_server; then
     log "Environment: VS Code Server"
 elif is_remote_container; then
@@ -84,10 +110,41 @@ fi
 log "ユーザー: $USER"
 log "ホームディレクトリ: $HOME"
 
+# Codespaces環境のデバッグ情報を出力
+debug_codespaces_environment
+
 # dotfilesのパス設定
 if is_codespaces; then
-    # Codespacesの場合
-    DOTFILES_SOURCE="/workspaces/.codespaces/.persistedshare/dotfiles"
+    # Codespacesの場合：複数の候補パスを試行
+    DOTFILES_CANDIDATES=(
+        "$HOME/.dotfiles"
+        "/workspaces/.codespaces/.persistedshare/dotfiles"
+        "/tmp/.dotfiles"
+        "$(pwd)"
+    )
+    
+    DOTFILES_SOURCE=""
+    for candidate in "${DOTFILES_CANDIDATES[@]}"; do
+        log "dotfilesパス候補をチェック中: $candidate"
+        if [ -d "$candidate" ]; then
+            DOTFILES_SOURCE="$candidate"
+            log "dotfilesパスを発見: $DOTFILES_SOURCE"
+            break
+        fi
+    done
+    
+    if [ -z "$DOTFILES_SOURCE" ]; then
+        error "Codespacesでdotfilesディレクトリが見つかりません"
+        log "チェックした候補パス:"
+        for candidate in "${DOTFILES_CANDIDATES[@]}"; do
+            log "  - $candidate"
+        done
+        log "環境変数の確認:"
+        log "  CODESPACES: ${CODESPACES:-未設定}"
+        log "  HOME: $HOME"
+        log "  PWD: $(pwd)"
+        exit 1
+    fi
 else
     # ローカル環境の場合（スクリプトが実行されているディレクトリ）
     DOTFILES_SOURCE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -95,12 +152,21 @@ fi
 
 DOTFILES_TARGET="$HOME/.config"
 
-# dotfilesが正しい場所にあるか確認
+# dotfilesが正しい場所にあるか最終確認（フォールバック後）
 if [ ! -d "$DOTFILES_SOURCE" ]; then
     error "dotfilesディレクトリが見つかりません: $DOTFILES_SOURCE"
     if is_codespaces; then
         error "Codespacesで dotfiles が正しく設定されていない可能性があります。"
-        error "設定手順: Settings → Codespaces → 'Automatically install dotfiles' を有効化"
+        error ""
+        error "トラブルシューティング:"
+        error "1. GitHub Settings → Codespaces → 'Automatically install dotfiles' が有効か確認"
+        error "2. dotfilesリポジトリがプライベートの場合、Codespacesからのアクセス権限を確認"
+        error "3. Codespaces作成後にdotfiles設定を変更した場合、新しいCodespacesを作成する必要があります"
+        error "4. install.sh、bootstrap.sh、setup.sh のいずれかがリポジトリのルートにあることを確認"
+        error ""
+        error "現在の環境:"
+        error "  作業ディレクトリ: $(pwd)"
+        error "  存在するファイル: $(ls -la)"
     fi
     exit 1
 fi
