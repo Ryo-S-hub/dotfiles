@@ -340,14 +340,25 @@ install_linux_packages() {
     if ! command -v rg &> /dev/null; then
         log "ripgrepをインストールしています..."
         if [ "$ARCH" = "amd64" ]; then
-            if RIPGREP_VERSION=$(curl -s https://api.github.com/repos/BurntSushi/ripgrep/releases/latest | grep -Po '"tag_name": "\K[^"]*') && \
-               curl -fsSL "https://github.com/BurntSushi/ripgrep/releases/download/${RIPGREP_VERSION}/ripgrep_${RIPGREP_VERSION#v}_amd64.deb" -o /tmp/ripgrep.deb && \
-               sudo dpkg -i /tmp/ripgrep.deb; then
-                rm -f /tmp/ripgrep.deb
-                log "ripgrepのインストールが完了しました"
+            # GitHub APIから最新バージョンを取得し、より安定した解析を行う
+            if RIPGREP_VERSION=$(curl -s https://api.github.com/repos/BurntSushi/ripgrep/releases/latest | jq -r '.tag_name' 2>/dev/null) && \
+               [ -n "$RIPGREP_VERSION" ] && [ "$RIPGREP_VERSION" != "null" ]; then
+                # バージョンからvプレフィックスを除去
+                VERSION_NUMBER="${RIPGREP_VERSION#v}"
+                DOWNLOAD_URL="https://github.com/BurntSushi/ripgrep/releases/download/${RIPGREP_VERSION}/ripgrep_${VERSION_NUMBER}_amd64.deb"
+                log "ripgrep ${RIPGREP_VERSION} をダウンロードしています..."
+                
+                if curl -fsSL "$DOWNLOAD_URL" -o /tmp/ripgrep.deb && \
+                   sudo dpkg -i /tmp/ripgrep.deb; then
+                    rm -f /tmp/ripgrep.deb
+                    log "ripgrepのインストールが完了しました"
+                else
+                    rm -f /tmp/ripgrep.deb
+                    warning "ripgrepのダウンロードに失敗しました（URL: $DOWNLOAD_URL）。aptからインストールを試行します..."
+                    sudo apt-get install -y ripgrep || warning "ripgrepのインストールに失敗しました"
+                fi
             else
-                rm -f /tmp/ripgrep.deb
-                warning "ripgrepのダウンロードに失敗しました。aptからインストールを試行します..."
+                warning "ripgrepのバージョン情報取得に失敗しました。aptからインストールを試行します..."
                 sudo apt-get install -y ripgrep || warning "ripgrepのインストールに失敗しました"
             fi
         else
@@ -359,14 +370,25 @@ install_linux_packages() {
     if ! command -v fd &> /dev/null; then
         log "fd-findをインストールしています..."
         if [ "$ARCH" = "amd64" ]; then
-            if FD_VERSION=$(curl -s https://api.github.com/repos/sharkdp/fd/releases/latest | grep -Po '"tag_name": "v\K[^"]*') && \
-               curl -fsSL "https://github.com/sharkdp/fd/releases/download/v${FD_VERSION}/fd_${FD_VERSION}_amd64.deb" -o /tmp/fd.deb && \
-               sudo dpkg -i /tmp/fd.deb; then
-                rm -f /tmp/fd.deb
-                log "fd-findのインストールが完了しました"
+            # GitHub APIから最新バージョンを取得し、より安定した解析を行う
+            if FD_VERSION=$(curl -s https://api.github.com/repos/sharkdp/fd/releases/latest | jq -r '.tag_name' 2>/dev/null) && \
+               [ -n "$FD_VERSION" ] && [ "$FD_VERSION" != "null" ]; then
+                # バージョンからvプレフィックスを除去
+                VERSION_NUMBER="${FD_VERSION#v}"
+                DOWNLOAD_URL="https://github.com/sharkdp/fd/releases/download/${FD_VERSION}/fd_${VERSION_NUMBER}_amd64.deb"
+                log "fd-find ${FD_VERSION} をダウンロードしています..."
+                
+                if curl -fsSL "$DOWNLOAD_URL" -o /tmp/fd.deb && \
+                   sudo dpkg -i /tmp/fd.deb; then
+                    rm -f /tmp/fd.deb
+                    log "fd-findのインストールが完了しました"
+                else
+                    rm -f /tmp/fd.deb
+                    warning "fd-findのダウンロードに失敗しました（URL: $DOWNLOAD_URL）。aptからインストールを試行します..."
+                    sudo apt-get install -y fd-find && sudo ln -sf /usr/bin/fdfind /usr/local/bin/fd || warning "fd-findのインストールに失敗しました"
+                fi
             else
-                rm -f /tmp/fd.deb
-                warning "fd-findのダウンロードに失敗しました。aptからインストールを試行します..."
+                warning "fd-findのバージョン情報取得に失敗しました。aptからインストールを試行します..."
                 sudo apt-get install -y fd-find && sudo ln -sf /usr/bin/fdfind /usr/local/bin/fd || warning "fd-findのインストールに失敗しました"
             fi
         else
@@ -381,22 +403,39 @@ install_linux_packages() {
     # fzfのインストール
     if ! command -v fzf &> /dev/null; then
         log "fzfをインストールしています..."
-        git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
-        ~/.fzf/install --all --no-bash --no-fish
+        if git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf && \
+           ~/.fzf/install --all --no-bash --no-fish; then
+            # PATHに追加（現在のセッション用）
+            export PATH="$HOME/.fzf/bin:$PATH"
+            log "fzfのインストールが完了しました"
+        else
+            warning "fzfのインストールに失敗しました"
+        fi
     fi
     
     # batのインストール
     if ! command -v bat &> /dev/null; then
         log "batをインストールしています..."
         if [ "$ARCH" = "amd64" ]; then
-            if BAT_VERSION=$(curl -s https://api.github.com/repos/sharkdp/bat/releases/latest | grep -Po '"tag_name": "v\K[^"]*') && \
-               curl -fsSL "https://github.com/sharkdp/bat/releases/download/v${BAT_VERSION}/bat_${BAT_VERSION}_amd64.deb" -o /tmp/bat.deb && \
-               sudo dpkg -i /tmp/bat.deb; then
-                rm -f /tmp/bat.deb
-                log "batのインストールが完了しました"
+            # GitHub APIから最新バージョンを取得し、より安定した解析を行う
+            if BAT_VERSION=$(curl -s https://api.github.com/repos/sharkdp/bat/releases/latest | jq -r '.tag_name' 2>/dev/null) && \
+               [ -n "$BAT_VERSION" ] && [ "$BAT_VERSION" != "null" ]; then
+                # バージョンからvプレフィックスを除去
+                VERSION_NUMBER="${BAT_VERSION#v}"
+                DOWNLOAD_URL="https://github.com/sharkdp/bat/releases/download/${BAT_VERSION}/bat_${VERSION_NUMBER}_amd64.deb"
+                log "bat ${BAT_VERSION} をダウンロードしています..."
+                
+                if curl -fsSL "$DOWNLOAD_URL" -o /tmp/bat.deb && \
+                   sudo dpkg -i /tmp/bat.deb; then
+                    rm -f /tmp/bat.deb
+                    log "batのインストールが完了しました"
+                else
+                    rm -f /tmp/bat.deb
+                    warning "batのダウンロードに失敗しました（URL: $DOWNLOAD_URL）。aptからインストールを試行します..."
+                    sudo apt-get install -y bat || warning "batのインストールに失敗しました"
+                fi
             else
-                rm -f /tmp/bat.deb
-                warning "batのダウンロードに失敗しました。aptからインストールを試行します..."
+                warning "batのバージョン情報取得に失敗しました。aptからインストールを試行します..."
                 sudo apt-get install -y bat || warning "batのインストールに失敗しました"
             fi
         else
@@ -418,20 +457,41 @@ install_linux_packages() {
     # lazygitのインストール
     if ! command -v lazygit &> /dev/null; then
         log "lazygitをインストールしています..."
-        LAZYGIT_VERSION=$(curl -s "https://api.github.com/repos/jesseduffield/lazygit/releases/latest" | grep -Po '"tag_name": "v\K[^"]*')
-        if [ "$ARCH" = "amd64" ]; then
-            LAZYGIT_ARCH="x86_64"
+        # GitHub APIから最新バージョンを取得し、より安定した解析を行う
+        if LAZYGIT_VERSION=$(curl -s https://api.github.com/repos/jesseduffield/lazygit/releases/latest | jq -r '.tag_name' 2>/dev/null) && \
+           [ -n "$LAZYGIT_VERSION" ] && [ "$LAZYGIT_VERSION" != "null" ]; then
+            # バージョンからvプレフィックスを除去
+            VERSION_NUMBER="${LAZYGIT_VERSION#v}"
+            
+            if [ "$ARCH" = "amd64" ]; then
+                LAZYGIT_ARCH="x86_64"
+            else
+                LAZYGIT_ARCH="arm64"
+            fi
+            
+            DOWNLOAD_URL="https://github.com/jesseduffield/lazygit/releases/download/${LAZYGIT_VERSION}/lazygit_${VERSION_NUMBER}_Linux_${LAZYGIT_ARCH}.tar.gz"
+            log "lazygit ${LAZYGIT_VERSION} をダウンロードしています..."
+            
+            if curl -fsSL "$DOWNLOAD_URL" | sudo tar xzf - -C /usr/local/bin lazygit; then
+                log "lazygitのインストールが完了しました"
+            else
+                warning "lazygitのダウンロードに失敗しました（URL: $DOWNLOAD_URL）"
+            fi
         else
-            LAZYGIT_ARCH="arm64"
+            warning "lazygitのバージョン情報取得に失敗しました"
         fi
-        curl -fsSL "https://github.com/jesseduffield/lazygit/releases/latest/download/lazygit_${LAZYGIT_VERSION}_Linux_${LAZYGIT_ARCH}.tar.gz" | \
-            sudo tar xzf - -C /usr/local/bin lazygit
     fi
     
     # zoxideのインストール
     if ! command -v zoxide &> /dev/null; then
         log "zoxideをインストールしています..."
-        curl -sS https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | bash
+        if curl -sS https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | bash; then
+            # PATHに追加（現在のセッション用）
+            export PATH="$HOME/.local/bin:$PATH"
+            log "zoxideのインストールが完了しました"
+        else
+            warning "zoxideのインストールに失敗しました"
+        fi
     fi
     
     # GitHub CLIのインストール
@@ -552,11 +612,21 @@ if ! command -v uv &> /dev/null; then
     if [ "$OS" = "macos" ]; then
         # macOSの場合はBrewfileでインストール済みのはず
         if ! command -v uv &> /dev/null; then
-            curl -LsSf https://astral.sh/uv/install.sh | sh
+            if curl -LsSf https://astral.sh/uv/install.sh | sh; then
+                export PATH="$HOME/.local/bin:$PATH"
+                log "UVのインストールが完了しました"
+            else
+                warning "UVのインストールに失敗しました"
+            fi
         fi
     else
         # Linux/Codespacesの場合
-        curl -LsSf https://astral.sh/uv/install.sh | sh
+        if curl -LsSf https://astral.sh/uv/install.sh | sh; then
+            export PATH="$HOME/.local/bin:$PATH"
+            log "UVのインストールが完了しました"
+        else
+            warning "UVのインストールに失敗しました"
+        fi
     fi
 fi
 

@@ -1,5 +1,29 @@
 #!/usr/bin/env zsh
 # FZF Custom Functions - Modular configuration
+
+# ============================================================================
+# FZF Setup and Path Configuration
+# ============================================================================
+# Ensure fzf is available in PATH
+if ! command -v fzf >/dev/null 2>&1; then
+    # Check different installation locations
+    if [[ -f "$HOME/.fzf/bin/fzf" ]]; then
+        # Linux/Codespaces installation via git clone
+        export PATH="$HOME/.fzf/bin:$PATH"
+    elif [[ -f "/usr/local/bin/fzf" ]]; then
+        # Manual installation to /usr/local/bin
+        export PATH="/usr/local/bin:$PATH"
+    elif [[ "$OSTYPE" == darwin* ]] && [[ -f "/opt/homebrew/bin/fzf" ]]; then
+        # macOS Homebrew installation
+        export PATH="/opt/homebrew/bin:$PATH"
+    fi
+fi
+
+# Exit if fzf is still not available
+if ! command -v fzf >/dev/null 2>&1; then
+    echo "Warning: fzf not found. Some functions may not work." >&2
+    return 1
+fi
 # ============================================================================
 # Process Management
 # ============================================================================

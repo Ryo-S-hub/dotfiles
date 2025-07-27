@@ -48,18 +48,36 @@ export LESSHISTFILE="$XDG_STATE_HOME/less/history"
 # ============================================================================
 # FZF Configuration
 # ============================================================================
-export FZF_BASE="/opt/homebrew/bin/fzf"
+# Set FZF_BASE based on OS and installation location
+if [[ "$OSTYPE" == darwin* ]] && [[ -f "/opt/homebrew/bin/fzf" ]]; then
+    export FZF_BASE="/opt/homebrew/bin/fzf"
+elif [[ -f "$HOME/.fzf/bin/fzf" ]]; then
+    export FZF_BASE="$HOME/.fzf/bin/fzf"
+elif command -v fzf >/dev/null 2>&1; then
+    export FZF_BASE="$(which fzf)"
+fi
 export FZF_DEFAULT_COMMAND='fd --type file --hidden --follow --exclude .git --color=always'
-export FZF_DEFAULT_OPTS='
+# Set clipboard command based on OS
+if [[ "$OSTYPE" == darwin* ]]; then
+    CLIPBOARD_CMD="pbcopy"
+elif command -v xclip >/dev/null 2>&1; then
+    CLIPBOARD_CMD="xclip -selection clipboard"
+elif command -v wl-copy >/dev/null 2>&1; then
+    CLIPBOARD_CMD="wl-copy"
+else
+    CLIPBOARD_CMD="cat"  # fallback
+fi
+
+export FZF_DEFAULT_OPTS="
   --ansi
   --height 40%
   --layout=reverse
   --border
   --inline-info
-  --bind="ctrl-y:execute-silent(echo -n {2..} | pbcopy)+abort"
-  --bind="ctrl-d:half-page-down"
-  --bind="ctrl-u:half-page-up"
-'
+  --bind=\"ctrl-y:execute-silent(echo -n {2..} | $CLIPBOARD_CMD)+abort\"
+  --bind=\"ctrl-d:half-page-down\"
+  --bind=\"ctrl-u:half-page-up\"
+"
 
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 export FZF_CTRL_T_OPTS="
@@ -74,7 +92,7 @@ export FZF_CTRL_R_OPTS="
   --preview 'echo {}'
   --preview-window down:3:hidden:wrap
   --bind 'ctrl-/:toggle-preview'
-  --bind 'ctrl-y:execute-silent(echo -n {2..} | pbcopy)+abort'
+  --bind 'ctrl-y:execute-silent(echo -n {2..} | $CLIPBOARD_CMD)+abort'
   --color header:italic
   --header 'Press CTRL-Y to copy command into clipboard'
 "

@@ -64,7 +64,13 @@ export HOMEBREW_CASK_OPTS="--require-sha"
 export HOMEBREW_NO_AUTO_UPDATE=1
 
 # Enable parallel compilation
-export MAKEFLAGS="-j$(sysctl -n hw.ncpu)"
+if [[ "$OSTYPE" == darwin* ]]; then
+    # macOSの場合
+    export MAKEFLAGS="-j$(sysctl -n hw.ncpu)"
+else
+    # Linuxの場合
+    export MAKEFLAGS="-j$(nproc)"
+fi
 
 # ============================================================================
 # Locale Settings for Interactive Shells

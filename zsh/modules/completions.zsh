@@ -69,6 +69,6 @@ command -v uv >/dev/null 2>&1 && eval "$(uv generate-shell-completion zsh)"
 # Plugin Management
 # ============================================================================
 # Zsh autosuggestions
-if [[ -f "$(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh" ]]; then
+if command -v brew >/dev/null 2>&1 && [[ -f "$(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh" ]]; then
     source "$(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
 fi
