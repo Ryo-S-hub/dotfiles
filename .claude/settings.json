@@ -1,10 +1,46 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-settings.json",
   "permissions": {
-    "allow": [
-
-    ],
-    "deny": []
+    "allow": [],
+    "deny": [
+      "Bash(sudo:*)",
+      "Bash(rm:*)",
+      "Bash(rm -rf:*)",
+      "Bash(rm -rf /*)",
+      "Bash(chmod 777 *)",
+      "Bash(git push:*)",
+      "Bash(git commit:*)",
+      "Bash(git reset:*)",
+      "Bash(git rebase:*)",
+      "Read(.env.*)",
+      "Read(id_rsa)",
+      "Read(id_ed25519)",
+      "Read(**/*token*)",
+      "Read(**/*key*)",
+      "Write(.env*)",
+      "Write(**/secrets/**)",
+      "Bash(curl:*)",
+      "Bash(wget:*)",
+      "Bash(nc:*)",
+      "Bash(npm uninstall:*)",
+      "Bash(npm remove:*)",
+      "Bash(psql:*)",
+      "Bash(mysql:*)",
+      "Bash(gh repo delete:*)",
+      "Bash(gh api -X DELETE repos/*)",
+      "Bash(gh repo delete*)",
+      "Bash(gh secret set*)",
+      "Bash(gh auth refresh*)",
+      "Bash(gh auth token*)",
+      "Bash(gh codespace ssh*)",
+      "Bash(gh codespace logs*)",
+      "Bash(gh api*/actions/runs/* -X DELETE*)",
+      "Bash(gh workflow disable*)",
+      "Bash(gh api*/orgs/* -X DELETE*)",
+      "Bash(gh api*/orgs/* -X PATCH*)",
+      "Bash(export GH_TOKEN*)",
+      "Bash(export GITHUB_TOKEN*)"
+    ]
   },
   "hooks": {
     "PostToolUse": [],
