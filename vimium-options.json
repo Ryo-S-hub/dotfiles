@@ -1,0 +1,58 @@
+{
+  "keyMappings": "# Insert your preferred key mappings here.\n\nunmap f\nunmap d\nunmap x\nunmap m\nunmap v\nunmap /\nunmap o\nunmap b\nunmap p\nunmap n\nunmap N\nunmap `\nunmap <c-e>\nmap m Mute or unmute current tab\nunmap H\nunmap yf\nunmap <a-f>\nunmap z\nunmap zH\nunmap zL\nmap h previousTab\nmap l nextTab\nmap L scrollRight\nmap H scrollLeft\nmap r reload\nmap gd LinkHints.activateModeToDownloadLink\nmap i LinkHints.activateMode\nmap I LinkHints.activateModeToOpenIncognito\nmap : LinkHints.activateModeToOpenInNewTab\nmap * LinkHints.activateModeWithQueue\n\nmap p openCopiedUrlInNewTab\nmap P openCopiedUrlInCurrentTab\n\nmap f scrollPageDown\nmap d scrollPageUp\nmap j scrollDown\nmap k scrollUp\nmap u goBack\nmap <c-r> goForward\n\nmap <c-[> passNextKey\nmap <c-]> passNextKey",
+  "linkHintCharacters": "fdsatgyuophjklwer",
+  "regexFindMode": true,
+  "grabBackFocus": true,
+  "searchEngines": "",
+  "settingsVersion": "2.3",
+  "exclusionRules": [
+    {
+      "passKeys": "",
+      "pattern": "https?://mail.google.com/*"
+    },
+    {
+      "passKeys": "",
+      "pattern": "https?://vimate.jp/*"
+    },
+    {
+      "passKeys": "",
+      "pattern": "https?://command-lab.com/*"
+    },
+    {
+      "passKeys": "",
+      "pattern": "https?://www.nytimes.com/*"
+    },
+    {
+      "passKeys": "",
+      "pattern": "https?://vim-adventures.com/*"
+    },
+    {
+      "passKeys": "",
+      "pattern": "https?://vimsnake.com/*"
+    },
+    {
+      "passKeys": "",
+      "pattern": "https?://untyping.jp/*"
+    },
+    {
+      "passKeys": "",
+      "pattern": "https?://www.e-typing.ne.jp/*"
+    },
+    {
+      "passKeys": "",
+      "pattern": "https?://det-bridge.quizgenerator.net/*"
+    },
+    {
+      "passKeys": "",
+      "pattern": "https?://codesandbox.io/*"
+    },
+    {
+      "passKeys": "",
+      "pattern": "https?://stackblitz.com/*"
+    },
+    {
+      "passKeys": "",
+      "pattern": "https?://www.boot.dev/*"
+    }
+  ]
+}
