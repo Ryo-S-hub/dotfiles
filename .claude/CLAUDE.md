@@ -46,14 +46,11 @@
 JavaScript/TypeScript 開発：
 
 - **bun/deno**: ランタイム
-- **pnpm/yarn**: パッケージマネージャ
+- **yarn**: パッケージマネージャ
+- **playwright**: ブラウザ自動化テスト
 - **tsc**: TypeScript コンパイラ
-- **biome/eslint/prettier**: フォーマッター・リンター
-- **playwright**: ブラウザ自動化
 
-## MCP
 
-- MCP は Docker MCP Gateway を通して利用する
 
 ## 開発ワークフロー
 
@@ -67,10 +64,11 @@ JavaScript/TypeScript 開発：
 
 ### 品質保証プロセス
 
-1. **事前チェック**: `pnpm tsc --noEmit`とプロジェクトに導入されている lint ツールを実行
+1. **事前チェック**: `tsc -- --noEmit`とプロジェクトに導入されている lint ツールを実行
 2. **段階的修正**: 各問題を体系的に対処
 3. **検証**: 修正後に再度チェック実行
 4. **クリーンアップ**: 一時ファイル削除、サーバー停止
+5. **フォーマット**: (可能ならlint fix) + プロジェクトに導入されているフォーマッターを実行
 
 ## TypeScript 開発ガイドライン
 
@@ -122,8 +120,8 @@ import { Guest } from "../../../types";
 
 ### ビルドエラーが発生した場合
 
-1. 型チェックを最初に実行: `pnpm tsc --noEmit`
-2. 依存関係の確認: `pnpm install`
+1. 型チェックを最初に実行: `tsc -- --noEmit`
+2. 依存関係の確認: `npm install`
 3. 全キャッシュをクリア: `rm -rf .next node_modules/.cache`
 4. 循環依存の確認
 
@@ -132,7 +130,7 @@ import { Guest } from "../../../types";
 ### 基本的な方法
 
 ```
-「コミットして」または「git commit して」と依頼
+「コミットして」または「commit」と依頼
 ```
 
 ### Claude Code が自動で行うこと
@@ -141,11 +139,6 @@ import { Guest } from "../../../types";
 - 変更内容に基づいて適切なコミットメッセージを生成
 - 日本語でのコミットメッセージ作成
 
-### カスタマイズ方法
-
-```
-「〇〇の修正として適切なコミットメッセージでコミットして」
-```
 
 ## 知見管理システム
 
