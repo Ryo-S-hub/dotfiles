@@ -366,6 +366,7 @@
     "terminal.integrated.defaultProfile.osx": "zsh",
     "terminal.integrated.enableImages": true,
     "terminal.integrated.env.osx": {
+        "PROJECT_ROOT": "${workspaceFolder}",
         "CW_NEW_SESSION": "1",
         "Q_NEW_SESSION": "1"
     },
