@@ -282,7 +282,8 @@
     "print.folder.maxFiles": 30,
     "print.folder.maxLines": 1200,
     "problems.sortOrder": "position",
-
+    "projectManager.git.baseFolders": [
+    ],
     "python.analysis.autoFormatStrings": true,
     "python.analysis.autoImportCompletions": true,
     "python.analysis.diagnosticMode": "workspace",
