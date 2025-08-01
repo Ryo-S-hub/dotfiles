@@ -49,7 +49,7 @@ aws/credentials
 aws/config
 gcloud/
 azure/
-docker/config.json
+docker/
 github-copilot/
 
 # アプリケーション固有のデータ/設定
@@ -58,6 +58,7 @@ claude/
 crossnote/
 dlv/
 htop/
+iterm2/
 jgit/
 raycast/
 rest-client/
