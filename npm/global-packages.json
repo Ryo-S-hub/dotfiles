@@ -1,0 +1,7 @@
+{
+  "@anthropic-ai/claude-code": "latest",
+  "@google/gemini-cli": "latest",
+  "difit": "latest",
+  "playwright": "latest",
+  "tsc": "latest"
+}
