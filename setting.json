@@ -122,7 +122,6 @@
     "editor.occurrencesHighlight": "multiFile",
     "editor.renderLineHighlight": "all",
     "editor.renderLineHighlightOnlyWhenFocus": true,
-    "editor.renderWhitespace": "all",
     "editor.scrollPredominantAxis": true,
     "editor.snippetSuggestions": "none",
     "editor.stickyScroll.enabled": true,
@@ -166,6 +165,9 @@
     "git.showPushSuccessNotification": true,
     "git.terminalGitEditor": true,
     "git.replaceTagsWhenPull": true,
+    "git.ignoreLimitWarning": true,
+    "git.showProgress": true,
+    "git.verboseCommit": true,
     "gitHistory.hideCommitViewExplorer": true,
     "gitHistory.sideBySide": true,
     "github.copilot.advanced": {},
@@ -871,7 +873,6 @@
     "editor.suggest.showWords": false,
     "editor.suggest.showKeywords": false,
     "editor.suggestSelection": "recentlyUsedByPrefix",
-    "editor.acceptSuggestionOnEnter": "smart",
     "editor.acceptSuggestionOnCommitCharacter": false,
     "editor.wordBasedSuggestions": "off",
     "explorer.sortOrderLexicographicOptions": "upper",
@@ -991,7 +992,6 @@
         "**/tmp/**": true,
         "**/temp/**": true
     },
-    // "explorer.excludeGitIgnore": true,
     "search.exclude": {
         "**/node_modules": true,
         "**/dist": true,
@@ -1005,7 +1005,8 @@
         "**/*.min.js": true,
         "**/*.map": true
     },
-    "terminal.integrated.persistentSessionReviveProcess": "never",
+    "editor.renderWhitespace": "boundary",
+    // "explorer.excludeGitIgnore": true,
     "editor.suggest.selectionMode": "never",
     "terminal.integrated.tabs.focusMode": "singleClick",
     "typescript.updateImportsOnFileMove.enabled": "always",
@@ -1036,5 +1037,7 @@
         "**/.hg/**",
         "**/.svn/**",
         "**/.next/**"
-    ]
+    ],
+    "editor.useTabStops": false,
+    "editor.insertSpaces": false,
 }
