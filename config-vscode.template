@@ -1,0 +1,303 @@
+# VSCode向けGit設定テンプレート
+# このファイルをgit/configにコピーして使用してください
+# 個人情報の箇所は自分の情報に置き換えてください
+
+[user]
+	name = YOUR_NAME
+	email = YOUR_EMAIL
+	# signingkey = YOUR_SIGNING_KEY  # GPG署名を使用する場合はコメントアウトを外す
+
+[core]
+	# 改行コード処理（Windowsではtrue、Mac/Linuxではinput）
+	autocrlf = input
+	# 日本語ファイル名を正しく表示
+	quotepath = false
+	# 大文字小文字の区別
+	ignorecase = false
+	# Mac環境での日本語正規化
+	precomposeunicode = true
+	# 改行コードの安全チェック
+	safecrlf = true
+	# フックパス（Huskyなど使用時）
+	hooksPath = .husky
+	
+	# === パフォーマンス最適化 ===
+	preloadindex = true
+	fscache = true
+	untrackedCache = true
+	# fsmonitorはVSCodeの監視機能と競合する可能性があるためコメントアウト
+	# fsmonitor = true
+
+[index]
+	# インデックス操作の高速化
+	version = 4
+	recordEndOfIndexEntries = true
+
+# === VSCodeとの互換性を考慮した差分表示設定 ===
+[diff]
+	# 色付き移動行表示
+	colorMoved = default
+	# より良い差分アルゴリズム
+	algorithm = histogram
+	# サブモジュールのログ表示
+	submodule = log
+	# より良いリネーム検出
+	renames = copies
+	# 単語レベルの差分表示
+	compactionHeuristic = true
+
+# deltaページャーはVSCodeの内蔵Git機能と競合する可能性があるため
+# ターミナル使用時のみ有効にすることを推奨
+# [pager]
+# 	diff = delta
+# 	log = delta
+# 	reflog = delta
+# 	show = delta
+# 	blame = delta
+
+# [delta]
+# 	side-by-side = true
+# 	line-numbers = true
+# 	navigate = true
+
+# [interactive]
+# 	diffFilter = delta --color-only
+
+[ghq]
+	root = ~/dev
+
+[color]
+	ui = auto
+	status = auto
+	diff = auto
+	branch = auto
+	interactive = auto
+	grep = auto
+
+[status]
+	# 未追跡ファイルをすべて表示
+	showUntrackedFiles = all
+	# サブモジュール変更のサマリー表示
+	submoduleSummary = true
+	# VSCodeのステータスバーで情報を表示するため有効化
+	aheadBehind = true
+
+[merge]
+	# ファストフォワードマージを無効化
+	ff = false
+	# 高度なコンフリクト表示
+	conflictStyle = zdiff3
+	# VSCodeの内蔵マージツールを使用するため、外部ツールは設定しない
+	# tool = vscode
+	# リネーム制限
+	renameLimit = 5000
+
+[init]
+	defaultBranch = main
+
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
+
+[pull]
+	ff = only
+	rebase = true
+
+[fetch]
+	prune = true
+	pruneTags = true
+	# 並列フェッチでパフォーマンス向上
+	parallel = 0
+
+[rebase]
+	# リベース時の自動スタッシュ
+	autostash = true
+	# fixup/squashコミットの自動整理
+	autosquash = true
+	# コミット情報のフォーマット
+	instructionFormat = "(%an <%ae>) %s"
+	# 参照の自動更新
+	updateRefs = true
+
+[grep]
+	lineNumber = true
+	# 拡張正規表現を有効化
+	extendedRegexp = true
+
+[commit]
+	# コミットテンプレート（必要に応じて設定）
+	# template = ~/.config/git/.commit_template
+	# コミットメッセージエディタで差分を表示
+	verbose = true
+	# GPG署名（設定する場合はコメントアウトを外す）
+	# gpgsign = true
+
+[branch]
+	autosetupmerge = always
+	autosetupRebase = always
+
+[push]
+	default = current
+	autoSetupRemote = true
+	# タグを自動的にプッシュ
+	followTags = true
+	# より安全な強制プッシュ
+	useForceIfIncludes = true
+
+[rerere]
+	# コンフリクト解決の記録と再利用
+	enabled = true
+	autoupdate = true
+
+# === セキュリティ設定 ===
+[protocol]
+	# 安全でないプロトコルを無効化
+	allow = never
+[protocol "file"]
+	allow = always
+[protocol "git"]
+	allow = always
+[protocol "ssh"]
+	allow = always
+[protocol "https"]
+	allow = always
+
+# === パフォーマンス設定 ===
+[gc]
+	auto = 256
+	# バックグラウンドメンテナンスを有効化
+	autopacklimit = 50
+
+# 大量ファイル処理の最適化
+[feature]
+	manyFiles = true
+
+# Pack最適化
+[pack]
+	useSparse = true
+
+[maintenance]
+	# リポジトリパスを設定
+	# repo = /path/to/your/repo
+	strategy = incremental
+
+# カラム出力で可読性向上
+[column]
+	ui = auto
+	branch = auto
+	status = auto
+	tag = auto
+
+# ログフォーマット
+[log]
+	date = iso
+	# 署名表示（必要に応じて有効化）
+	showSignature = false
+
+# サブモジュール設定
+[submodule]
+	recurse = false
+	fetchJobs = 4
+
+# === URL設定（HTTPSとSSHの両方を許可） ===
+# 以下の設定はSSHを強制するため、VSCodeでHTTPS認証を使いたい場合は問題になる
+# 必要に応じてコメントアウトまたは削除
+# [url "https://github.com/"]
+# 	insteadOf = git@github.com:
+# [url "https://gitlab.com/"]
+# 	insteadOf = git@gitlab.com:
+
+# === エイリアス ===
+[alias]
+	# 基本ショートカット
+	s = status --short --branch
+	st = status  # stashと混同しないようstatusのまま
+	co = checkout
+	br = branch
+	ci = commit
+	d = diff
+	dc = diff --cached
+	
+	# 追加ショートカット
+	a = add
+	aa = add --all
+	ap = add --patch
+	
+	# コミットショートカット
+	c = commit
+	ca = commit --amend
+	can = commit --amend --no-edit
+	cm = commit -m
+	cma = commit --all -m
+	
+	# ログショートカット
+	l = log --oneline
+	lg = log --oneline --graph --decorate
+	ll = log --graph --pretty=format:'%C(yellow)%h%C(cyan)%d%Creset %s %C(white)- %an, %ar%Creset'
+	lol = log --graph --decorate --pretty=oneline --abbrev-commit
+	lola = log --graph --decorate --pretty=oneline --abbrev-commit --all
+	
+	# 差分ショートカット
+	ds = diff --stat
+	dw = diff --word-diff
+	
+	# プッシュ/プルショートカット
+	p = push
+	pf = push --force-with-lease
+	pu = push --set-upstream origin HEAD
+	pl = pull
+	pr = pull --rebase
+	
+	# ブランチ管理
+	bd = branch -d
+	bD = branch -D
+	bm = branch -m
+	
+	# スタッシュショートカット（stではなくstshを使用）
+	stsh = stash
+	stp = stash pop
+	stl = stash list
+	sts = stash show
+	
+	# リセットショートカット
+	unstage = reset HEAD --
+	undo = reset --soft HEAD~1
+	hard-reset = reset --hard HEAD~1
+	
+	# リモートショートカット
+	r = remote
+	rv = remote -v
+	ra = remote add
+	rr = remote remove
+	
+	# 高度なコマンド
+	find-merge = "!sh -c 'commit=$0 && branch=${1:-HEAD} && (git rev-list $commit..$branch --ancestry-path | cat -n; git rev-list $commit..$branch --first-parent | cat -n) | sort -k2 -s | uniq -f1 -d | sort -n | tail -1 | cut -f2'"
+	show-ignored = "!git clean -ndX"
+	cleanup = "!git branch --merged | grep -v '\\*\\|master\\|main\\|develop' | xargs -n 1 git branch -d"
+	
+	# 同期ショートカット
+	sync = !git fetch origin && git rebase @{u}
+	sync-main = !git fetch origin && git rebase origin/main
+	update = !git fetch --all --prune && git merge --ff-only @{u}
+	
+	# 履歴とファイル追跡
+	who = shortlog -sn
+	whois = "!sh -c 'git log -i --pretty=\"format:%an <%ae>\" --author=\"$1\" | sort -u' -"
+	whatis = show -s --pretty='tformat:%h (%s, %ad)' --date=short
+	file-history = log --follow -p --
+	
+	# 作業ディレクトリの状態
+	save = !git add -A && git commit -m 'SAVEPOINT'
+	wip = !git add -u && git commit -m "WIP"
+	wipe = !git add -A && git commit -qm 'WIPE SAVEPOINT' && git reset HEAD~1 --hard
+	
+	# 有用なクエリ
+	contributors = shortlog --summary --numbered
+	rank = shortlog -sn --no-merges
+	
+	# クイックフィックス
+	oops = commit --amend --no-edit
+	fix = "!f() { git commit --fixup=$1; }; f"
+	squash = "!f() { git commit --squash=$1; }; f"
