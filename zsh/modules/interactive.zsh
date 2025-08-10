@@ -70,38 +70,55 @@ if [[ -o interactive ]]; then
 fi
 
 # ============================================================================
-# Interactive Development Tools
+# Interactive Development Tools (Lazy Loading)
 # ============================================================================
-# rbenv initialization (interactive features)
+# rbenv lazy loading
 if [[ -o interactive ]] && command -v rbenv >/dev/null 2>&1; then
-    eval "$(rbenv init - zsh)"
+    rbenv() {
+        unfunction rbenv
+        eval "$(command rbenv init - zsh)"
+        rbenv "$@"
+    }
 fi
 
-# pyenv initialization (interactive features)
+# pyenv lazy loading
 if [[ -o interactive ]] && command -v pyenv >/dev/null 2>&1; then
-    eval "$(pyenv init -)"
+    pyenv() {
+        unfunction pyenv
+        eval "$(command pyenv init -)"
+        pyenv "$@"
+    }
 fi
 
-# Google Cloud SDK completion
-if [[ -o interactive ]] && [[ -f "$HOME/google-cloud-sdk/completion.zsh.inc" ]]; then
-    source "$HOME/google-cloud-sdk/completion.zsh.inc"
+# Google Cloud SDK (lazy loading)
+if [[ -o interactive ]] && [[ -d "$HOME/google-cloud-sdk" ]]; then
+    gcloud() {
+        unfunction gcloud
+        # パスを追加
+        [[ -f "$HOME/google-cloud-sdk/path.zsh.inc" ]] && source "$HOME/google-cloud-sdk/path.zsh.inc"
+        # 補完を読み込み
+        [[ -f "$HOME/google-cloud-sdk/completion.zsh.inc" ]] && source "$HOME/google-cloud-sdk/completion.zsh.inc"
+        gcloud "$@"
+    }
 fi
 
-# Homebrew completion setup
-if [[ -o interactive ]] && type brew &>/dev/null; then
-    FPATH="$(brew --prefix)/share/zsh/site-functions:${FPATH}"
+# Homebrew completion setup (using unified check)
+if [[ -o interactive ]] && [[ "$ZSH_OFFLINE" != "1" ]] && [[ "$HAS_HOMEBREW" == "1" ]]; then
+    [[ -n "$HOMEBREW_PREFIX" ]] && FPATH="$HOMEBREW_PREFIX/share/zsh/site-functions:${FPATH}"
 fi
 
 # ============================================================================
-# Welcome Message
+# Welcome Message (Lazy Loading)
 # ============================================================================
-# Display system information on interactive login
+# Display system information on interactive login (background)
 if [[ -o interactive ]] && [[ -o login ]]; then
-    if command -v fastfetch >/dev/null 2>&1; then
-        fastfetch --config minimal
-    elif command -v neofetch >/dev/null 2>&1; then
-        neofetch --config minimal
-    fi
+    {
+        if command -v fastfetch >/dev/null 2>&1; then
+            fastfetch --config minimal
+        elif command -v neofetch >/dev/null 2>&1; then
+            neofetch --config minimal
+        fi
+    } &!
 fi
 
 # ============================================================================

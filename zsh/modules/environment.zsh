@@ -8,6 +8,30 @@ export OS_TYPE="$(uname -s)"
 export TERM_PROGRAM="${TERM_PROGRAM:-$TERM}"
 
 # ============================================================================
+# Network/Performance Settings
+# ============================================================================
+# オフラインモード (ZSH_OFFLINE=1 で有効)
+# ネットワーク接続を必要とする機能を無効化
+export ZSH_OFFLINE="${ZSH_OFFLINE:-0}"
+
+# Homebrew存在確認の一元化
+if command -v brew >/dev/null 2>&1; then
+    export HAS_HOMEBREW=1
+    # Homebrewパスの効率的な設定
+    if [[ -z "$HOMEBREW_PREFIX" ]]; then
+        if [[ -d "/opt/homebrew" ]]; then
+            export HOMEBREW_PREFIX="/opt/homebrew"
+        elif [[ -d "/usr/local/Homebrew" ]]; then
+            export HOMEBREW_PREFIX="/usr/local"
+        else
+            [[ "$ZSH_OFFLINE" != "1" ]] && export HOMEBREW_PREFIX="$(brew --prefix)"
+        fi
+    fi
+else
+    export HAS_HOMEBREW=0
+fi
+
+# ============================================================================
 # Development Environment Variables (not in .zshenv)
 # ============================================================================
 # Git delta

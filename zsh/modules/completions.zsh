@@ -11,19 +11,34 @@ autoload -Uz history-search-end
 autoload -Uz chpwd_recent_dirs cdr add-zsh-hook
 
 # ============================================================================
+# Docker CLI completions
+# ============================================================================
+# Add Docker completions to fpath before compinit
+if [[ -d "${HOME}/.docker/completions" ]]; then
+    fpath=("${HOME}/.docker/completions" $fpath)
+fi
+
+# ============================================================================
 # Completion System (optimized initialization)
 # ============================================================================
-# Speed up compinit by checking cache once a day
-if [[ -n "${ZDOTDIR:-$HOME}/.zcompdump" ]]; then
-    if [[ "${ZDOTDIR:-$HOME}/.zcompdump" -nt /usr/share/zsh ]] && [[ ! "${ZDOTDIR:-$HOME}/.zcompdump.zwc" -ot "${ZDOTDIR:-$HOME}/.zcompdump" ]]; then
+# Check cache age (rebuild if older than a day)
+_zcompdump="${ZDOTDIR:-$HOME}/.zcompdump"
+
+if [[ -n "$_zcompdump" ]] && [[ -f "$_zcompdump" ]]; then
+    # Use cached completion if less than 20 hours old
+    if [[ "$_zcompdump" -nt /usr/share/zsh ]] && [[ "$_zcompdump.zwc" -nt "$_zcompdump" ]] && [[ $(date -r "$_zcompdump" +%s) -gt $(( $(date +%s) - 72000 )) ]]; then
         compinit -C
     else
         compinit
-        [[ -f "${ZDOTDIR:-$HOME}/.zcompdump" ]] && zcompile "${ZDOTDIR:-$HOME}/.zcompdump"
+        # Compile dump for faster loading
+        { [[ -f "$_zcompdump" ]] && zcompile "$_zcompdump" } &!
     fi
 else
     compinit
+    { [[ -f "$_zcompdump" ]] && zcompile "$_zcompdump" } &!
 fi
+
+unset _zcompdump
 
 # ============================================================================
 # Zoxide Integration
@@ -58,17 +73,23 @@ fi
 # ============================================================================
 # External Tool Completions
 # ============================================================================
-# Google Cloud SDK
-[[ -f "$HOME/google-cloud-sdk/path.zsh.inc" ]] && source "$HOME/google-cloud-sdk/path.zsh.inc"
-[[ -f "$HOME/google-cloud-sdk/completion.zsh.inc" ]] && source "$HOME/google-cloud-sdk/completion.zsh.inc"
+# Google Cloud SDK - now handled with lazy loading in interactive.zsh
 
-# UV (Python package manager)
-command -v uv >/dev/null 2>&1 && eval "$(uv generate-shell-completion zsh)"
+# UV (Python package manager) - lazy loading
+if command -v uv >/dev/null 2>&1; then
+    uv() {
+        unfunction uv
+        eval "$(command uv generate-shell-completion zsh)"
+        uv "$@"
+    }
+fi
 
 # ============================================================================
 # Plugin Management
 # ============================================================================
-# Zsh autosuggestions
-if command -v brew >/dev/null 2>&1 && [[ -f "$(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh" ]]; then
-    source "$(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
+# Zsh autosuggestions (using unified Homebrew check)
+if [[ "$ZSH_OFFLINE" != "1" ]] && [[ "$HAS_HOMEBREW" == "1" ]] && [[ -n "$HOMEBREW_PREFIX" ]]; then
+    _autosuggestions_file="$HOMEBREW_PREFIX/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
+    [[ -f "$_autosuggestions_file" ]] && source "$_autosuggestions_file"
+    unset _autosuggestions_file
 fi

@@ -22,7 +22,9 @@ export FZF_DEFAULT_OPTS="--bind 'ctrl-p:up,ctrl-n:down,ctrl-k:up,ctrl-j:down'"
 # fi
 
 # ============================================================================
-# Prompt Configuration
+# Prompt Configuration (Lazy Loading)
 # ============================================================================
-# Starship prompt (uncomment to enable)
-command -v starship >/dev/null 2>&1 && eval "$(starship init zsh)"
+# Starship prompt (lazy initialization)
+if command -v starship >/dev/null 2>&1; then
+    { eval "$(starship init zsh)" } &!
+fi

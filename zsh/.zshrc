@@ -63,12 +63,20 @@ for module in "${zsh_modules[@]}"; do
 done
 
 # ============================================================================
+# Autoload Functions (Lazy Loading)
+# ============================================================================
+# Zellij関数のautoload設定
+if [[ -f "$ZSH_MODULES_DIR/zellij-functions.zsh" ]]; then
+    # fpathにモジュールディレクトリを追加
+    fpath=("$ZSH_MODULES_DIR" $fpath)
+    
+    # Zellij関数をautoloadで登録（初回実行時に読み込み）
+    autoload -Uz zj zjdev zjwork zjp zjclean zjs zjcreate
+fi
+
+# ============================================================================
 # Local Configuration
 # ============================================================================
 # Source local configuration if exists
 [[ -f "${XDG_CONFIG_HOME}/zsh/.zshrc.local" ]] && source "${XDG_CONFIG_HOME}/zsh/.zshrc.local"
-# The following lines have been added by Docker Desktop to enable Docker CLI completions.
-fpath=(/Users/shiraisr/.docker/completions $fpath)
-autoload -Uz compinit
-compinit
-# End of Docker CLI completions
+# Docker CLI completions are now handled in completions.zsh
