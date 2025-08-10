@@ -74,12 +74,6 @@
     //   "source.addMissingImports": "explicit",
     //   "source.fixAll.eslint": "explicit"
     // },
-    "search.exclude": {
-        "**/.next": true,
-        "**/coverage": true,
-        "**/dist": true,
-        "package-lock.json": true
-    },
     "accessibility.signalOptions.debouncePositionChanges": true,
     "accessibility.voice.speechLanguage": "ja-JP",
     "aws.telemetry": false,
@@ -90,6 +84,7 @@
     "css.lint.unknownAtRules": "ignore",
     "cursor.composer.collapsePaneInputBoxPills": true,
     "cursor.cpp.enablePartialAccepts": true,
+    // "cloudcode.project": "rescuenow052",
     "debug.console.acceptSuggestionOnEnter": "on",
     "debug.console.fontSize": 14,
     "debug.internalConsoleOptions": "openOnSessionStart",
@@ -170,19 +165,20 @@
     "git.pruneOnFetch": true,
     "git.showPushSuccessNotification": true,
     "git.terminalGitEditor": true,
+    "git.replaceTagsWhenPull": true,
     "gitHistory.hideCommitViewExplorer": true,
     "gitHistory.sideBySide": true,
     "github.copilot.advanced": {},
-    "github.copilot.chat.commitMessageGeneration.instructions": [
-        {
-            "file": ".github/prompts/COMMIT_CONVENTION.prompt.md"
-        },
-    ],
-    "github.copilot.chat.pullRequestDescriptionGeneration.instructions": [
-        {
-            "file": ".github/prompts/PULLREQUEST_CONVENTION.prompt.md"
-        },
-    ],
+    // "github.copilot.chat.commitMessageGeneration.instructions": [
+    //   {
+    //     "file": ".github/prompts/COMMIT_CONVENTION.prompt.md"
+    //   },
+    // ],
+    // "github.copilot.chat.pullRequestDescriptionGeneration.instructions": [
+    //   {
+    //     "file": ".github/prompts/PULLREQUEST_CONVENTION.prompt.md"
+    //   },
+    // ],
     // "github.copilot.chat.reviewSelection.instructions": [
     //   {
     //     "file": ".github/prompts/REVIEW_CONVENTION.prompt.md"
@@ -192,9 +188,7 @@
     "github.copilot.chat.editor.temporalContext.enabled": true,
     "github.copilot.chat.generateTests.codeLens": true,
     "github.copilot.chat.localeOverride": "ja",
-    "github.copilot.chat.followUps": "never",
     "github.copilot.chat.scopeSelection": true,
-    "github.copilot.chat.search.semanticTextResults": true,
     "github.copilot.enable": {
         "*": true,
         "plaintext": false,
@@ -202,7 +196,6 @@
         "scminput": true
     },
     "github.copilot.nextEditSuggestions.enabled": true,
-    "githubPullRequests.experimental.notificationsView": true,
     "githubPullRequests.experimental.useQuickChat": true,
     "githubPullRequests.pullBranch": "never",
     "githubPullRequests.pullRequestDescription": "Copilot",
@@ -270,19 +263,9 @@
     // "prettier.bracketSameLine": true,
     // "prettier.singleAttributePerLine": true,
     // "prettier.vueIndentScriptAndStyle": true,
-    "print.folder.exclude": [
-        "{bin,obj,out}",
-        "node_modules",
-        "data",
-        "**/*.{bin,exe,dll,hex,pdb,pdf,pfx,png,jpg,gif,bmp,suo,design}"
-    ],
-    "print.folder.fileNames": true,
-    "print.folder.include": [],
-    "print.folder.includeFileList": false,
-    "print.folder.maxFiles": 30,
-    "print.folder.maxLines": 1200,
     "problems.sortOrder": "position",
     "projectManager.git.baseFolders": [
+        "/Users/shiraisr/workspace"
     ],
     "python.analysis.autoFormatStrings": true,
     "python.analysis.autoImportCompletions": true,
@@ -878,7 +861,6 @@
     "cursor.terminal.usePreviewBox": true,
     "cursorStats.currency": "JPY",
     "githubPullRequests.showPullRequestNumberInTree": true,
-    "git.replaceTagsWhenPull": true,
     "debug.allowBreakpointsEverywhere": true,
     "debug.hideLauncherWhileDebugging": true,
     "github.copilot.chat.codesearch.enabled": true,
@@ -997,6 +979,33 @@
         "**/dist": true,
         "**/build": true
     },
+    "files.watcherExclude": {
+        "**/node_modules/**": true,
+        "**/.git/**": true,
+        "**/dist/**": true,
+        "**/build/**": true,
+        "**/.next/**": true,
+        "**/.cache/**": true,
+        "**/coverage/**": true,
+        "**/.nyc_output/**": true,
+        "**/tmp/**": true,
+        "**/temp/**": true
+    },
+    // "explorer.excludeGitIgnore": true,
+    "search.exclude": {
+        "**/node_modules": true,
+        "**/dist": true,
+        "**/build": true,
+        "**/.next": true,
+        "**/.cache": true,
+        "**/coverage": true,
+        "**/.nyc_output": true,
+        "**/tmp": true,
+        "**/temp": true,
+        "**/*.min.js": true,
+        "**/*.map": true
+    },
+    "terminal.integrated.persistentSessionReviveProcess": "never",
     "editor.suggest.selectionMode": "never",
     "terminal.integrated.tabs.focusMode": "singleClick",
     "typescript.updateImportsOnFileMove.enabled": "always",
@@ -1013,12 +1022,19 @@
     "javascript.preferences.importModuleSpecifier": "non-relative",
     "typescript.preferences.importModuleSpecifier": "non-relative",
     "azureTerraform.survey": {
-        "surveyPromptDate": "2025-07-30T06:39:33.293Z",
-        "surveyPromptIgnoredCount": 0
+        "surveyPromptDate": "2025-08-11T17:31:45.046Z",
+        "surveyPromptIgnoredCount": 1
     },
     "biome.lsp.trace.server": "messages",
     "javascript.updateImportsOnFileMove.enabled": "always",
     "github.codespaces.showPerformanceExplorer": true,
     "gitlens.fileAnnotations.preserveWhileEditing": false,
-    "gitlens.views.formats.commits.label": "${id ➤}${message} ${pullRequest}"
+    "gitlens.views.formats.commits.label": "${id ➤}${message} ${pullRequest}",
+    "tailwindCSS.files.exclude": [
+        "**/.git/**",
+        "**/node_modules/**",
+        "**/.hg/**",
+        "**/.svn/**",
+        "**/.next/**"
+    ]
 }
