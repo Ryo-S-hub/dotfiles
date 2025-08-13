@@ -1,0 +1,55 @@
+{
+  "// VSCode Neovim 拡張機能の基本設定": "",
+  "vim.neovimConfigPath": "~/.config/nvim/init.lua",
+  "vim.neovimUseConfigFile": true,
+  "vim.leader": "<space>",
+  
+  "// アフィニティ設定 - パフォーマンス向上のため": "",
+  "vscode-neovim.neovimExecutablePaths.default": "/opt/homebrew/bin/nvim",
+
+  "// Composite Key設定 - jj, jk, kj, ;;, ,, などの2文字キー": "",
+  "vscode-neovim.compositeKeys": {
+    "jj": {
+      "command": "vscode-neovim.escape"
+    },
+    "jk": {
+      "command": "vscode-neovim.lua",
+      "args": [
+        [
+          "local vscode = require('vscode')",
+          "vscode.action('vscode-neovim.escape')",
+          "vscode.action('workbench.action.files.save')"
+        ]
+      ]
+    },
+    "kj": {
+      "command": "vscode-neovim.lua",
+      "args": [
+        [
+          "local vscode = require('vscode')",
+          "vscode.action('vscode-neovim.escape')",
+          "vscode.action('editor.action.formatDocument')"
+        ]
+      ]
+    },
+    ";;": {
+      "command": "vscode-neovim.lua",
+      "args": [
+        [
+          "local vscode = require('vscode')",
+          "vscode.action('workbench.action.quickOpen')"
+        ]
+      ]
+    },
+    ",,": {
+      "command": "vscode-neovim.lua",
+      "args": [
+        [
+          "local vscode = require('vscode')",
+          "vscode.action('workbench.action.showCommands')"
+        ]
+      ]
+    }
+  }
+
+}
