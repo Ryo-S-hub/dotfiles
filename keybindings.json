@@ -507,11 +507,6 @@
     "when": "!terminalFocus"
   },
   {
-    "key": "cmd+b",
-    "command": "gitlens.gitCommands",
-    "when": "inQuickOpen && !gitlens:disabled && config.gitlens.keymap == 'chorded'"
-  },
-  {
     "key": "alt+cmd+g /",
     "command": "-gitlens.gitCommands",
     "when": "!gitlens:disabled && config.gitlens.keymap == 'chorded'"
@@ -615,7 +610,7 @@
     "when": "workbench.panel.repl.view.active"
   },
   {
-    "key": "cmd+4",
+    "key": "cmd+5",
     "command": "workbench.view.debug"
   },
   {
@@ -1089,7 +1084,7 @@
     "when": "viewContainer.workbench.view.explorer.enabled"
   },
   {
-    "key": "shift+cmd+u",
+    "key": "cmd+b",
     "command": "references-view.findImplementations"
   },
   {
@@ -1174,15 +1169,7 @@
     "command": "workbench.view.extension.project-manager"
   },
   {
-    "key": "cmd+5",
-    "command": "workbench.view.extension.githd-explorer"
-  },
-  {
-    "key": "shift+cmd+m",
-    "command": "workbench.view.extension.bookmarks"
-  },
-  {
-    "key": "shift+cmd+k",
+    "key": "cmd+m",
     "command": "bookmarks.toggle",
     "when": "editorTextFocus"
   },
@@ -1358,11 +1345,6 @@
     "when": "accessibleViewIsShown && accessibleViewCurrentProviderId == 'terminal' || accessibleViewIsShown && terminalHasBeenCreated && accessibleViewCurrentProviderId == 'terminal' || accessibleViewIsShown && terminalProcessSupported && accessibleViewCurrentProviderId == 'terminal'"
   },
   {
-    "key": "cmd+y",
-    "command": "github.copilot.generate",
-    "when": "editorTextFocus && github.copilot.activated && !commentEditorFocused"
-  },
-  {
     "key": "ctrl+enter",
     "command": "-github.copilot.generate",
     "when": "editorTextFocus && github.copilot.activated && !commentEditorFocused"
@@ -1459,11 +1441,6 @@
   {
     "key": "cmd+i",
     "command": "-composer.startComposerPrompt"
-  },
-  {
-    "key": "cmd+b",
-    "command": "gitlens.showQuickBranchHistory",
-    "when": "!inQuickOpen"
   },
   {
     "key": "ctrl+cmd+o",
@@ -1592,5 +1569,23 @@
   {
     "key": "shift+cmd+y",
     "command": "gitlens.graph.switchToEditorLayout"
+  },
+  {
+    "key": "cmd+y",
+    "command": "gitlens.openWorkingFile",
+    "when": "inDiffEditor"
+  },
+  {
+    "key": "cmd+y",
+    "command": "gitlens.diffWithPrevious",
+    "when": "!inDiffEditor"
+  },
+  {
+    "key": "cmd+4",
+    "command": "gitlens.showCommitsView"
+  },
+  {
+    "key": "shift+cmd+m",
+    "command": "workbench.view.extension.bookmarks"
   }
 ]
