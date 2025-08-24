@@ -1,0 +1,117 @@
+# テーマ設定ファイル
+# より見やすいダークテーマ設定
+
+# ============================================================================
+# Status Line
+# ============================================================================
+[status]
+separator_open  = ""
+separator_close = ""
+separator_style = { fg = "gray", bg = "gray" }
+
+[status.left]
+name = { fg = "white", bg = "blue" }
+path = { fg = "cyan" }
+
+[status.right]
+count = { fg = "magenta" }
+size = { fg = "green" }
+datetime = { fg = "yellow" }
+
+# ============================================================================
+# Manager - File List
+# ============================================================================
+[mgr]
+cwd = { fg = "cyan", italic = true }
+
+# ホバー時の色
+hovered      = { reversed = true }
+preview_dir  = { underline = true }
+preview_file = { fg = "white" }
+
+# ============================================================================
+# Select
+# ============================================================================
+[select]
+border   = { fg = "blue" }
+active   = { fg = "magenta", bold = true }
+inactive = { fg = "gray" }
+
+# ============================================================================
+# Input
+# ============================================================================
+[input]
+border   = { fg = "blue" }
+title    = { fg = "white" }
+value    = { fg = "cyan" }
+selected = { reversed = true }
+
+# ============================================================================
+# Confirmation
+# ============================================================================
+[confirm]
+border      = { fg = "red" }
+title       = { fg = "white" }
+content     = { fg = "white" }
+
+# ============================================================================
+# Task
+# ============================================================================
+[tasks]
+border = { fg = "blue" }
+title  = { fg = "white" }
+
+# ============================================================================
+# Which - Help
+# ============================================================================
+[which]
+cols = 3
+mask = { bg = "black", fg = "gray" }
+cand = { fg = "cyan" }
+rest = { fg = "gray" }
+desc = { fg = "magenta" }
+separator = "  "
+separator_style = { fg = "gray" }
+
+# ============================================================================
+# Help
+# ============================================================================
+[help]
+on      = { fg = "cyan" }
+desc    = { fg = "gray" }
+hovered = { reversed = true, bold = true }
+footer  = { fg = "black", bg = "white" }
+
+# ============================================================================
+# File Types
+# ============================================================================
+[filetype]
+
+rules = [
+    # アーカイブファイル
+    { mime = "application/zip",             fg = "magenta" },
+    { mime = "application/gzip",            fg = "magenta" },
+    { mime = "application/x-tar",           fg = "magenta" },
+    { mime = "application/x-bzip",          fg = "magenta" },
+    { mime = "application/x-bzip2",         fg = "magenta" },
+    { mime = "application/x-7z-compressed", fg = "magenta" },
+    { mime = "application/x-rar",           fg = "magenta" },
+
+    # ドキュメント
+    { mime = "text/*",                fg = "green" },
+    { mime = "application/json",      fg = "yellow" },
+    { mime = "*/javascript",          fg = "yellow" },
+    
+    # 画像
+    { mime = "image/*",               fg = "cyan" },
+    
+    # 動画・音声
+    { mime = "video/*",               fg = "red" },
+    { mime = "audio/*",               fg = "red" },
+    
+    # 実行ファイル
+    { name = "*", is = "exec", fg = "red", bold = true },
+
+    # ディレクトリ
+    { name = "*/", fg = "blue", bold = true },
+]

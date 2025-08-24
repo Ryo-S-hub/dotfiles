@@ -64,8 +64,8 @@
     "accessibility.voice.speechLanguage": "ja-JP",
     "aws.telemetry": false,
     "azureTerraform.survey": {
-        "surveyPromptDate": "2025-08-11T17:31:45.046Z",
-        "surveyPromptIgnoredCount": 1
+        "surveyPromptDate": "2025-09-13T12:54:21.515Z",
+        "surveyPromptIgnoredCount": 2
     },
     "biome.lsp.trace.server": "messages",
     "biome.suggestInstallingGlobally": false,
@@ -103,7 +103,7 @@
     "diffEditor.ignoreTrimWhitespace": false,
     "diffEditor.maxComputationTime": 0,
     "diffEditor.maxFileSize": 0,
-    "diffEditor.renderSideBySideInlineBreakpoint": 1200,
+    "diffEditor.renderSideBySideInlineBreakpoint": 0,
     "diffEditor.wordWrap": "off",
     "docker.contexts.showInStatusBar": true,
     "docker.extension.enableComposeLanguageServer": false,
@@ -178,7 +178,6 @@
         "typescriptreact",
         "vue",
         "html",
-        "markdown",
         "json",
         "jsonc",
         "yaml"
@@ -967,7 +966,7 @@
             "terminal.foreground": "#abb2bf",
             "terminalCursor.foreground": "#ec576b",
             "titleBar.activeBackground": "#0e0b16",
-            "titleBar.border": "#0e0b16"
+            "titleBar.border": "#0e0b16",
         },
         "diffEditor.removedTextBorder": "default",
         "editorIndentGuide.activeBackground1": "#b22222",
@@ -993,7 +992,7 @@
     },
     "workbench.colorTheme": "Default High Contrast",
     "workbench.editor.alwaysShowEditorActions": true,
-    // "biome.enabled": false,
+    "biome.enabled": false,
     // Next.js Routing Files 専用
     "workbench.editor.customLabels.enabled": true,
     "workbench.editor.customLabels.patterns": {
@@ -1040,5 +1039,102 @@
     "xml.symbols.maxItemsComputed": 50000,
     "zenMode.fullScreen": false,
     "zenMode.hideLineNumbers": false,
-    "zenMode.hideStatusBar": false
+    "zenMode.hideStatusBar": false,
+    "python.terminal.shellIntegration.enabled": true,
+    "python.analysis.supportAllPythonDocuments": true,
+    "python.useEnvironmentsExtension": true,
+    "editor.aiStats.enabled": true,
+    "chat.math.enabled": true,
+    "terminal.integrated.macOptionClickForcesSelection": true,
+    // VSCode Neovim 拡張機能の基本設定": "",
+    // "vim.neovimConfigPath": "~/.config/nvim/init.lua",
+    // "vim.neovimUseConfigFile": true,
+    // "vim.leader": "<space>",
+    // Composite Key設定 - jj, jk, kj, ;;, ,, などの2文字キー": "",
+    "vscode-neovim.compositeKeys": {
+        "jj": {
+            "command": "vscode-neovim.escape"
+        },
+        "jk": {
+            "command": "vscode-neovim.lua",
+            "args": [
+                [
+                    "local vscode = require('vscode')",
+                    "vscode.action('vscode-neovim.escape')",
+                    "vscode.action('workbench.action.files.save')"
+                ]
+            ]
+        },
+        "kj": {
+            "command": "vscode-neovim.lua",
+            "args": [
+                [
+                    "local vscode = require('vscode')",
+                    "vscode.action('vscode-neovim.escape')",
+                    "vscode.action('editor.action.formatDocument')"
+                ]
+            ]
+        },
+        ";;": {
+            "command": "vscode-neovim.lua",
+            "args": [
+                [
+                    "local vscode = require('vscode')",
+                    "vscode.action('workbench.action.quickOpen')"
+                ]
+            ]
+        },
+        ",,": {
+            "command": "vscode-neovim.lua",
+            "args": [
+                [
+                    "local vscode = require('vscode')",
+                    "vscode.action('workbench.action.showCommands')"
+                ]
+            ]
+        }
+    },
+    "extensions.experimental.affinity": {
+        "asvetliakov.vscode-neovim": 1
+    },
+    "diffEditor.hideUnchangedRegions.contextLineCount": 6,
+    "gitlens.views.commits.files.compact": false,
+    "partialDiff.enableTelemetry": false,
+    "chat.instructionsFilesLocations": {
+        ".github/instructions": true,
+        "/var/folders/by/0f7x4ccx4h1gyj1gfm4nz1080000gn/T/postman-collections-post-response.instructions.md": true,
+        "/var/folders/by/0f7x4ccx4h1gyj1gfm4nz1080000gn/T/postman-collections-pre-request.instructions.md": true,
+        "/var/folders/by/0f7x4ccx4h1gyj1gfm4nz1080000gn/T/postman-folder-post-response.instructions.md": true,
+        "/var/folders/by/0f7x4ccx4h1gyj1gfm4nz1080000gn/T/postman-folder-pre-request.instructions.md": true,
+        "/var/folders/by/0f7x4ccx4h1gyj1gfm4nz1080000gn/T/postman-http-request-post-response.instructions.md": true,
+        "/var/folders/by/0f7x4ccx4h1gyj1gfm4nz1080000gn/T/postman-http-request-pre-request.instructions.md": true
+    },
+    "gitlens.views.scm.grouped.views": {
+        "commits": false,
+        "branches": true,
+        "remotes": true,
+        "stashes": true,
+        "tags": true,
+        "worktrees": true,
+        "contributors": true,
+        "fileHistory": false,
+        "repositories": true,
+        "searchAndCompare": false,
+        "launchpad": false
+    },
+    "workbench.editor.wrapTabs": true,
+    "workbench.editor.enablePreviewFromQuickOpen": true,
+    "window.density.editorTabHeight": "compact",
+    "vsnotes.defaultNotePath": "/Users/shiraisr/Downloads/vsnotes",
+    "vsnotes.defaultNoteTitle": "{dt}_{title}.md",
+    "vsnotes.treeviewHideTags": true,
+    "python.defaultInterpreterPath": "/opt/homebrew/bin/python3",
+    // "explorer.sortOrder": "modified",
+    "git.autorefresh": true,
+    "gitlens.views.commits.files.layout": "tree",
+    "gitlens.views.commits.pullRequests.enabled": true,
+    "gitlens.views.commits.pullRequests.showForCommits": true,
+    "gitlens.views.repositories.autoRefresh": true,
+    "gitlens.rebaseEditor.showDetailsView": "open",
+    "gitlens.rebaseEditor.ordering": "asc"
 }

@@ -25,6 +25,7 @@
 	preloadindex = true
 	fscache = true
 	untrackedCache = true
+	editor = code --wait
 	# fsmonitorはVSCodeの監視機能と競合する可能性があるためコメントアウト
 	# fsmonitor = true
 
@@ -45,6 +46,7 @@
 	renames = copies
 	# 単語レベルの差分表示
 	compactionHeuristic = true
+	tool = vscode
 
 # deltaページャーはVSCodeの内蔵Git機能と競合する可能性があるため
 # ターミナル使用時のみ有効にすることを推奨
@@ -88,7 +90,7 @@
 	# 高度なコンフリクト表示
 	conflictStyle = zdiff3
 	# VSCodeの内蔵マージツールを使用するため、外部ツールは設定しない
-	# tool = vscode
+	tool = vscode
 	# リネーム制限
 	renameLimit = 5000
 
@@ -301,3 +303,9 @@
 	oops = commit --amend --no-edit
 	fix = "!f() { git commit --fixup=$1; }; f"
 	squash = "!f() { git commit --squash=$1; }; f"
+[difftool "vscode"]
+	cmd = code --wait --diff $LOCAL $REMOTE
+[mergetool "vscode"]
+	cmd = code --wait $MERGED
+[sequence]
+	editor = code --wait --reuse-window

@@ -1,0 +1,86 @@
+# Yazi完全キーマップ設定
+# 全ての基本機能を含む
+
+[mgr]
+prepend_keymap = [
+    # ============================================================================
+    # ヘルプ（優先度最高）
+    # ============================================================================
+    { on = [ "?" ], run = "help", desc = "Show help" },
+    { on = [ "<F1>" ], run = "help", desc = "Show help" },
+    
+    # ============================================================================
+    # ファイル選択（重要）
+    # ============================================================================
+    { on = [ "<Space>" ], run = "toggle", desc = "Toggle selection" },
+    { on = [ "v" ], run = "visual_mode", desc = "Enter visual mode" },
+    { on = [ "V" ], run = "visual_mode --unset", desc = "Exit visual mode" },
+    { on = [ "<C-a>" ], run = "select_all --state=true", desc = "Select all" },
+    { on = [ "<C-r>" ], run = "select_all --state=none", desc = "Deselect all" },
+    
+    # ============================================================================
+    # ファイル操作
+    # ============================================================================
+    { on = [ "y", "y" ], run = "yank", desc = "Copy selected" },
+    { on = [ "y", "d" ], run = "yank --cut", desc = "Cut selected" },
+    { on = [ "p" ], run = "paste", desc = "Paste" },
+    { on = [ "P" ], run = "paste --force", desc = "Paste (overwrite)" },
+    { on = [ "d", "d" ], run = "remove", desc = "Move to trash" },
+    { on = [ "d", "D" ], run = "remove --permanently", desc = "Remove permanently" },
+    { on = [ "r" ], run = "rename", desc = "Rename" },
+    
+    # ============================================================================
+    # 検索（?はヘルプ用なので別キーを使用）
+    # ============================================================================
+    { on = [ "/" ], run = "find", desc = "Find next" },
+    { on = [ "," ], run = "find --previous", desc = "Find previous" },
+    { on = [ "n" ], run = "find_arrow", desc = "Go to next found" },
+    { on = [ "N" ], run = "find_arrow --previous", desc = "Go to previous found" },
+    { on = [ "s" ], run = "search fd", desc = "Search with fd" },
+    { on = [ "S" ], run = "search rg", desc = "Search content with ripgrep" },
+    { on = [ "f" ], run = "filter --smart", desc = "Filter" },
+    
+    # ============================================================================
+    # タブ操作
+    # ============================================================================
+    { on = [ "t" ], run = "tab_create --current", desc = "Create tab" },
+    { on = [ "1" ], run = "tab_switch 0", desc = "Switch to tab 1" },
+    { on = [ "2" ], run = "tab_switch 1", desc = "Switch to tab 2" },
+    { on = [ "3" ], run = "tab_switch 2", desc = "Switch to tab 3" },
+    { on = [ "4" ], run = "tab_switch 3", desc = "Switch to tab 4" },
+    { on = [ "5" ], run = "tab_switch 4", desc = "Switch to tab 5" },
+    { on = [ "[" ], run = "tab_switch -1 --relative", desc = "Previous tab" },
+    { on = [ "]" ], run = "tab_switch 1 --relative", desc = "Next tab" },
+    { on = [ "{" ], run = "tab_swap -1", desc = "Swap tab to left" },
+    { on = [ "}" ], run = "tab_swap 1", desc = "Swap tab to right" },
+    
+    # ============================================================================
+    # プラグイン操作
+    # ============================================================================
+    { on = [ "P", "s" ], run = "plugin projects save", desc = "Save current project" },
+    { on = [ "P", "l" ], run = "plugin projects load", desc = "Load project" },
+    { on = [ "P", "P" ], run = "plugin projects load_last", desc = "Load last project" },
+    { on = [ "P", "d" ], run = "plugin projects delete", desc = "Delete project" },
+    { on = [ "g", "i" ], run = "plugin lazygit", desc = "Open lazygit" },
+    { on = [ "c", "h" ], run = "plugin chmod", desc = "Change permissions" },
+    { on = [ "d", "i" ], run = "plugin diff", desc = "Compare with selected" },
+    { on = [ "b", "a" ], run = "plugin bookmarks --args add", desc = "Add bookmark" },
+    { on = [ "b", "l" ], run = "plugin bookmarks --args list", desc = "List bookmarks" },
+    { on = [ "c", "z" ], run = "plugin compress", desc = "Compress selected" },
+    
+    # ============================================================================
+    # Git操作
+    # ============================================================================
+    { on = [ "g", "s" ], run = [ "shell", "git status", "--block", "--confirm" ], desc = "Git status" },
+    { on = [ "g", "l" ], run = [ "shell", "git log --oneline -n 20", "--block", "--confirm" ], desc = "Git log" },
+    { on = [ "g", "d" ], run = [ "shell", "git diff", "--block", "--confirm" ], desc = "Git diff" },
+    
+    # ============================================================================
+    # 外部ツール
+    # ============================================================================
+    { on = [ "!" ], run = "shell --interactive", desc = "Run shell command" },
+    { on = [ ":" ], run = "shell --block --interactive", desc = "Run shell command (block)" },
+    { on = [ "." ], run = "hidden toggle", desc = "Toggle hidden files" },
+    { on = [ "z" ], run = "plugin zoxide", desc = "Jump with zoxide" },
+    { on = [ "Z" ], run = "plugin fzf", desc = "Jump with fzf" },
+]

@@ -1587,5 +1587,9 @@
   {
     "key": "shift+cmd+m",
     "command": "workbench.view.extension.bookmarks"
+  },
+  {
+    "key": "alt+t",
+    "command": "workbench.action.createTerminalEditor"
   }
 ]

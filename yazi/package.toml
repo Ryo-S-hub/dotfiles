@@ -1,22 +1,57 @@
 [[plugin.deps]]
 use = "yazi-rs/plugins:git"
-rev = "86d28e4"
-hash = "e01006bfb38951ea89031bd918b20dbb"
+rev = "d7588f6"
+hash = "63b6c222bf2103b3023389dde5e2ecfe"
 
 [[plugin.deps]]
 use = "MasouShizuka/projects"
-rev = "4f11ecc"
-hash = "17fa17295d27864f62875f06a77f72e7"
+rev = "a5e33db"
+hash = "3de26efded35814ba3e55e28f1c389a4"
 
 [[plugin.deps]]
 use = "yazi-rs/plugins:full-border"
-rev = "864a021"
-hash = "1f3dad061209081a6b04dd6ff2cb06c7"
+rev = "d7588f6"
+hash = "3996fc74044bc44144b323686f887e1"
 
 [[plugin.deps]]
 use = "Lil-Dank/lazygit"
-rev = "7a08a09"
-hash = "a1fa2b3e1826c3a34804ea8c548e9f80"
+rev = "8f37dc5"
+hash = "ee71543790f0ce3951161045a3787abd"
+
+[[plugin.deps]]
+use = "yazi-rs/plugins:miller"
+rev = "main"
+hash = "b25c2acb08d9ca5ff5cf71ea764fed8d"
+
+[[plugin.deps]]
+use = "yazi-rs/plugins:chmod"
+rev = "main"
+hash = ""
+
+[[plugin.deps]]
+use = "KKV9/compress"
+rev = "main"
+hash = ""
+
+[[plugin.deps]]
+use = "Ape/fzf"
+rev = "main"
+hash = ""
+
+[[plugin.deps]]
+use = "dedukun/bookmarks"
+rev = "main"
+hash = ""
+
+[[plugin.deps]]
+use = "yazi-rs/plugins:smart-enter"
+rev = "main"
+hash = ""
+
+[[plugin.deps]]
+use = "yazi-rs/plugins:diff"
+rev = "d7588f6"
+hash = "47865a70cade14a0b9b6bc6a54f16bdb"
 
 [flavor]
 deps = []

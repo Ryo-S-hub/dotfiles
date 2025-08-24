@@ -57,6 +57,20 @@ extract = [
 	{ run = 'unar "$1"', desc = "Extract here", for = "unix" },
 ]
 
+# Development tools
+git = [
+	{ run = 'lazygit', block = true, desc = "Open lazygit", for = "unix" },
+]
+
+terminal = [
+	{ run = '$SHELL', block = true, desc = "Open terminal", for = "unix" },
+]
+
+# External viewers
+bat = [
+	{ run = 'bat "$@"', block = true, desc = "View with bat", for = "unix" },
+]
+
 # ============================================================================
 # Open Rules
 # ============================================================================
@@ -98,7 +112,20 @@ name = "*/"
 run = "git"
 
 # ============================================================================
-# Key Mappings - Navigation
+# Key Mappings - Help (Must be first to override defaults)
+# ============================================================================
+[[mgr.prepend_keymap]]
+on   = [ "?" ]
+run  = "help"
+desc = "Show help"
+
+[[mgr.prepend_keymap]]
+on   = [ "<F1>" ]
+run  = "help"
+desc = "Show help"
+
+# ============================================================================
+# Key Mappings - Navigation  
 # ============================================================================
 [[mgr.prepend_keymap]]
 on   = [ "g", "g" ]
@@ -180,7 +207,7 @@ run  = "find"
 desc = "Find next"
 
 [[mgr.prepend_keymap]]
-on   = [ "?" ]
+on   = [ "," ]
 run  = "find --previous"
 desc = "Find previous"
 
@@ -350,6 +377,38 @@ desc = "Jump with zoxide"
 on   = [ "Z" ]
 run  = "plugin fzf"
 desc = "Jump with fzf"
+
+# ============================================================================
+# Plugin Keymaps
+# ============================================================================
+[[mgr.prepend_keymap]]
+on   = [ "c", "h" ]
+run  = "plugin chmod"
+desc = "Change permissions"
+
+[[mgr.prepend_keymap]]
+on   = [ "d", "i" ]
+run  = "plugin diff"
+desc = "Compare with selected"
+
+[[mgr.prepend_keymap]]
+on   = [ "b", "a" ]
+run  = "plugin bookmarks --args add"
+desc = "Add bookmark"
+
+[[mgr.prepend_keymap]]
+on   = [ "b", "l" ]
+run  = "plugin bookmarks --args list"
+desc = "List bookmarks"
+
+[[mgr.prepend_keymap]]
+on   = [ "c", "z" ]
+run  = "plugin compress"
+desc = "Compress selected"
+
+# ============================================================================
+# Help Keymaps - Remove conflicting find binding
+# ============================================================================
 
 # ============================================================================
 # Tasks Settings

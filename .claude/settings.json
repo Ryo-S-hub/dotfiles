@@ -1,7 +1,16 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-settings.json",
   "permissions": {
-    "allow": [],
+    "allow": [
+      "mcp_serena",
+      "serena-mcp-server",
+      "serena",
+      "mcp_context7",
+      "playwright",
+      "MCP_DOCKER",
+      "mcp_shadcn-ui",
+      "gemini-cli"
+    ],
     "deny": [
       "Bash(sudo:*)",
       "Bash(rm:*)",
@@ -58,6 +67,6 @@
     ]
   },
   "feedbackSurveyState": {
-    "lastShownTime": 1754069582012
+    "lastShownTime": 1754114370444
   }
 }
